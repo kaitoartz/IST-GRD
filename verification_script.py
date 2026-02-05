@@ -7,7 +7,7 @@ def verify_game_flow():
 
         # 1. Load Page
         print("Loading page...")
-        page.goto("http://localhost:8080/grd-bag-game/")
+        page.goto("http://localhost:5001/grd-bag-game/")
         page.wait_for_load_state("networkidle")
 
         # Screenshot Intro
