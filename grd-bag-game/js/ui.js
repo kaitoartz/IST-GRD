@@ -1,4 +1,4 @@
-import { state, CONFIG, getMissingEssentials, getBagAnalysis } from './state.js';
+import { state, CONFIG } from './state.js';
 
 // --- Sound System ---
 const audio = {
@@ -18,7 +18,10 @@ export function playSound(name) {
 const screens = {
   intro: document.getElementById('screen-intro'),
   game: document.getElementById('screen-game'),
-  results: document.getElementById('screen-results')
+  results: document.getElementById('screen-results'),
+  briefing: document.getElementById('screen-briefing'),
+  debrief: document.getElementById('screen-debrief'),
+  pause: document.getElementById('screen-pause')
 };
 
 const toast = {
@@ -31,14 +34,99 @@ const toast = {
 // --- Screen Transitions ---
 export function showScreen(screenName) {
   Object.values(screens).forEach(s => {
-    s.classList.add('hidden');
-    s.classList.remove('active');
+    if(s && s.id !== `screen-${screenName}`) {
+       // Pause is an overlay, don't hide game behind it?
+       // Actually pause screen has opaque background, so it covers game.
+       // Briefing covers game. Debrief covers game.
+       // So we can hide others or stack them.
+       // "Standard" way: Hide others.
+       if(screenName === 'pause' && s.id === 'screen-game') return; // Don't hide game for pause
+
+       s.classList.add('hidden');
+       s.classList.remove('active');
+    }
   });
   
   if (screens[screenName]) {
     screens[screenName].classList.remove('hidden');
-    // Small delay to allow CSS transition to play
-    setTimeout(() => screens[screenName].classList.add('active'), 50);
+    // Small delay for CSS transition
+    setTimeout(() => screens[screenName].classList.add('active'), 10);
+  }
+}
+
+export function hideOverlay(screenName) {
+  if (screens[screenName]) {
+    screens[screenName].classList.remove('active');
+    setTimeout(() => screens[screenName].classList.add('hidden'), 300);
+  }
+}
+
+// --- HUD Updates ---
+
+export function updateBriefing(taskText, timeLeft) {
+  const taskEl = document.getElementById('briefing-task');
+  const timerEl = document.getElementById('briefing-timer');
+  if(taskEl) taskEl.textContent = taskText;
+  if(timerEl) timerEl.textContent = timeLeft;
+}
+
+export function updateDebrief(result) {
+  const textEl = document.getElementById('debrief-text');
+  const iconEl = document.getElementById('debrief-icon');
+  const infoEl = document.getElementById('debrief-info');
+
+  if(result.passed) {
+    textEl.textContent = "¡MUY BIEN!";
+    textEl.style.color = "var(--success)";
+    iconEl.textContent = "✅";
+    infoEl.textContent = `+${result.scoreAdded} Puntos`;
+    playSound('success');
+  } else {
+    textEl.textContent = "¡CUIDADO!";
+    textEl.style.color = "var(--danger)";
+    iconEl.textContent = "⚠️";
+    infoEl.textContent = result.message || "Faltan vitales";
+    playSound('error');
+  }
+}
+
+export function showFeedback(title, message, type = 'info') {
+  if (toast.timeout) clearTimeout(toast.timeout);
+
+  if (toast.el) {
+    toast.el.className = `toast ${type}`;
+    if(toast.title) toast.title.textContent = title;
+    if(toast.msg) toast.msg.textContent = message;
+
+    toast.el.classList.remove('hidden');
+
+    toast.timeout = setTimeout(() => {
+      toast.el.classList.add('hidden');
+    }, 2000); // Shorter duration for fast pace
+  }
+}
+
+export function updateHUD() {
+  // Timer
+  const timerVal = document.getElementById('time-val');
+  if (timerVal) {
+    timerVal.textContent = state.timeLeft;
+    const timerBox = document.getElementById('timer-display');
+    if (state.timeLeft <= 5) timerBox.classList.add('urgent');
+    else timerBox.classList.remove('urgent');
+  }
+
+  // Lives (only in challenge)
+  const livesContainer = document.getElementById('lives-container');
+  if (state.mode === 'challenge') {
+    livesContainer.classList.remove('hidden');
+    const hearts = livesContainer.querySelectorAll('.life-heart');
+    hearts.forEach((h, idx) => {
+      if (idx < state.lives) h.classList.remove('lost');
+      else h.classList.add('lost');
+    });
+  } else {
+    livesContainer.classList.add('hidden');
   }
 }
 
@@ -52,12 +140,13 @@ export function renderTray(items) {
     const el = document.createElement('div');
     el.className = 'item-card';
     el.dataset.id = item.id;
+    el.dataset.category = item.category; // For color coding logic in CSS
     
     // Ghost effect if in bag
     if (state.bag.includes(item.id)) {
       el.style.opacity = '0.4';
       el.style.filter = 'grayscale(1)';
-      el.style.pointerEvents = 'none'; // Lock it
+      el.style.pointerEvents = 'none';
     }
 
     el.innerHTML = `
@@ -78,11 +167,12 @@ export function renderBag(items) {
     if (!item) return;
 
     const el = document.createElement('div');
-    el.className = 'item-card in-bag'; // Add animation class here if needed
+    el.className = 'item-card in-bag';
     el.dataset.id = item.id;
     el.innerHTML = `
       <img src="${item.icon}" alt="${item.name}" class="item-icon">
     `;
+    // Click to remove logic handled in dragdrop or main
     bagList.appendChild(el);
   });
 
@@ -94,125 +184,33 @@ export function renderBag(items) {
     bagList.appendChild(el);
   }
 
-  // Update Stats & Progress Bar
+  // Update Button State
+  /*
   const count = state.bag.length;
   const max = CONFIG.SLOTS_MAX;
-  const pct = (count / max) * 100;
-  
-  document.getElementById('slots-val').textContent = count;
-  document.getElementById('slot-progress').style.width = `${pct}%`;
-
-  // Progress Color Logic
-  const progEl = document.getElementById('slot-progress');
-  if(pct < 50) progEl.style.backgroundColor = 'var(--success)';
-  else if(pct < 100) progEl.style.backgroundColor = 'var(--info)';
-  else progEl.style.backgroundColor = 'var(--warning)';
-  
-  // Finish Button
-  const btnFinish = document.getElementById('btn-finish');
-  if (count === max) {
-    btnFinish.disabled = false;
-    btnFinish.classList.add('pulse-anim');
-  } else {
-    btnFinish.disabled = true;
-    btnFinish.classList.remove('pulse-anim');
+  const btnCheck = document.getElementById('btn-check');
+  if (count >= CONFIG.MIN_ESSENTIALS_TO_PASS) {
+     // Maybe enable check button if minimum reached?
+     // WarioWare usually auto-submits or waits for time.
+     // Prompt implies drag-drop mechanics.
   }
+  */
 }
 
-export function updateTimerUI(seconds) {
-  const el = document.getElementById('time-val');
-  const minutes = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  el.textContent = `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  
-  const timerBox = document.getElementById('timer-display');
-  if (seconds <= 10) timerBox.classList.add('danger');
-  else timerBox.classList.remove('danger');
-}
-
-// --- Enhanced Feedback (Toast) ---
-export function showFeedback(title, message, type = 'info') {
-  if (toast.timeout) clearTimeout(toast.timeout);
-  
-  toast.el.className = `toast ${type}`; // reset
-  toast.title.textContent = title;
-  toast.msg.textContent = message;
-
-  toast.el.classList.remove('hidden');
-
-  // Play sound based on type
-  if (type === 'error') playSound('error');
-  // success sound is handled mostly in game logic for big events
-
-  toast.timeout = setTimeout(() => {
-    toast.el.classList.add('hidden');
-  }, 4000);
-}
 
 // --- Results Visualization ---
-export function renderResults(finalScore, essentialsCount) {
-  // Animate Score
+export function renderFinalResults() {
   const scoreEl = document.getElementById('final-score');
-  const pathEl = document.getElementById('score-circle-path');
-  
-  // Reset for animation
-  scoreEl.textContent = 0;
-  
-  // Determine success
-  const passed = essentialsCount >= CONFIG.MIN_ESSENTIALS_TO_PASS;
-  
-  // Colors & Circle Stroke
-  const maxScore = 100; // estimated max
-  const dashVal = Math.min((finalScore / maxScore) * 100, 100);
-  
-  setTimeout(() => {
-    pathEl.setAttribute('stroke-dasharray', `${dashVal}, 100`);
-    if(passed) pathEl.parentNode.classList.add('success');
-    else pathEl.parentNode.classList.add('warning');
-  }, 100);
+  scoreEl.textContent = state.score;
 
-  // Counter Animation
-  let start = 0;
-  const dur = 1000;
-  const step = timestamp => {
-    if (!start) start = timestamp;
-    const progress = Math.min((timestamp - start) / dur, 1);
-    scoreEl.textContent = Math.floor(progress * finalScore);
-    if (progress < 1) window.requestAnimationFrame(step);
-  };
-  window.requestAnimationFrame(step);
-
-  // Texts
-  const title = document.getElementById('result-title');
   const emoji = document.getElementById('result-emoji');
-  
-  if (passed) {
-    title.textContent = "¡Estás Preparado/a!";
-    emoji.textContent = "🏆";
-    playSound('success');
-    
-    // Confetti Explosion!
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-    
-  } else {
-    title.textContent = "Sigue Practicando";
-    emoji.textContent = "🎒";
-  }
+  const title = document.getElementById('result-title');
 
-  // Details
-  const posBlock = document.getElementById('feedback-positive');
-  const impBlock = document.getElementById('feedback-improvements');
-  posBlock.innerHTML = '';
-  impBlock.innerHTML = '';
-
-  const missing = getMissingEssentials();
-  if (missing.length > 0) {
-    impBlock.innerHTML = `<h4>⚠️ Te faltó lo vital:</h4><ul>${missing.map(m => `<li>${m.name}</li>`).join('')}</ul>`;
+  if (state.mode === 'tutorial') {
+    title.textContent = "¡Entrenamiento Completo!";
+    emoji.textContent = "🎓";
   } else {
-    posBlock.innerHTML = `<h4>✅ ¡Excelente criterio!</h4><p>Llevaste todo lo indispensable.</p>`;
+    title.textContent = "Fin del Juego";
+    emoji.textContent = "🏁";
   }
 }

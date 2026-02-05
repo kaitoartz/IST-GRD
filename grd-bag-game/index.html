@@ -8,7 +8,7 @@
   <!-- Fonts: Rubik (Moderno y Friendly) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/styles.css">
   
@@ -23,6 +23,8 @@
     <audio id="sfx-pop" src="assets/audio/pop.mp3" preload="auto"></audio>
     <audio id="sfx-error" src="assets/audio/error.mp3" preload="auto"></audio>
     <audio id="sfx-success" src="assets/audio/success.mp3" preload="auto"></audio>
+    <!-- New sounds placeholders -->
+    <!-- <audio id="sfx-tick" src="assets/audio/tick.mp3" preload="auto"></audio> -->
   </div>
 
   <div class="background-pattern"></div>
@@ -30,85 +32,89 @@
   <main class="app-container">
     
     <!-- PANTALLA 1: INTRO -->
-    <section id="screen-intro" class="screen active fade-in">
+    <section id="screen-intro" class="screen active">
       <div class="intro-card glass-panel">
-        <img src="assets/images/intro_hero.png" alt="Emergency Kit" class="intro-hero-img">
+        <img src="assets/images/intro_hero.png" alt="Kit de Emergencia" class="intro-hero-img">
         <h1 class="title-main">Tu Bolso de<br>Emergencia</h1>
         <p class="intro-text">
-          Si tuvieras que evacuar ahora mismo,<br>
-          <strong>¿qué es realmente indispensable?</strong>
-          <br><span class="highlight-text">Tienes 8 espacios. Elige bien.</span>
+          Aprende a identificar lo indispensable en segundos.
+          <br><span class="highlight-text">Elige tu experiencia:</span>
         </p>
         
         <div class="mode-selector">
           <label class="mode-option">
-            <input type="radio" name="gameMode" value="practice" checked>
+            <input type="radio" name="gameMode" value="calm" checked>
             <div class="mode-card">
               <span class="emoji">🧘</span>
               <div class="text">
-                <strong>Práctica</strong>
-                <small>Sin tiempo. Aprende con calma.</small>
+                <strong>Modo Calma</strong>
+                <small>Sin prisa. Música tranquila. Práctica sin fin.</small>
               </div>
             </div>
           </label>
           <label class="mode-option">
             <input type="radio" name="gameMode" value="challenge">
             <div class="mode-card">
-              <span class="emoji">⏱️</span>
+              <span class="emoji">⚡</span>
               <div class="text">
-                <strong>Desafío</strong>
-                <small>75 segundos. ¡Piensa rápido!</small>
+                <strong>Modo Desafío</strong>
+                <small>¡Velocidad! 3 Vidas. Niveles rápidos.</small>
               </div>
             </div>
           </label>
         </div>
 
         <button id="btn-start" class="btn btn-primary btn-xl pulse-anim">
-          Comenzar Aventura
+          COMENZAR
         </button>
       </div>
     </section>
 
-    <!-- PANTALLA 2: JUEGO -->
+    <!-- PANTALLA: BRIEFING (3s) -->
+    <section id="screen-briefing" class="screen hidden">
+      <div class="briefing-content">
+        <div class="briefing-title">PREPARADOS...</div>
+        <div id="briefing-task" class="briefing-task">¡EMPACA LO VITAL!</div>
+        <div id="briefing-timer" style="font-size: 2rem;">3</div>
+      </div>
+    </section>
+
+    <!-- PANTALLA 2: JUEGO (ACTION) -->
     <section id="screen-game" class="screen hidden">
-      <header class="game-header glass-panel">
-        <div class="header-content">
-          <div class="logo-area">
-            <span class="logo-emoji">⛑️</span>
-            <span class="logo-text">IST <strong>GRD</strong></span>
+      <header class="game-header">
+        <div class="logo-area">
+          <button id="btn-pause" class="btn btn-secondary" style="padding: 5px 15px; font-size: 1.2rem;">⏸️</button>
+          <span class="logo-text">IST <strong>GRD</strong></span>
+        </div>
+
+        <div class="hud-stats">
+          <!-- Solo visible en desafío -->
+          <div id="lives-container" class="lives-display hidden">
+            <span class="life-heart">❤️</span>
+            <span class="life-heart">❤️</span>
+            <span class="life-heart">❤️</span>
           </div>
           
-          <div class="hud-stats">
-            <div class="hud-pill timer-pill hidden" id="timer-display">
-              <span class="icon">⏳</span> <span id="time-val">01:15</span>
-            </div>
-            <div class="hud-pill slots-pill">
-              <span class="label">Espacio</span>
-              <div class="progress-track">
-                <div id="slot-progress" class="progress-fill" style="width: 0%"></div>
-              </div>
-              <span class="count"><span id="slots-val">0</span>/<span id="slots-max">8</span></span>
-            </div>
+          <div class="timer-pill" id="timer-display">
+            <span id="time-val">15</span>
           </div>
         </div>
       </header>
 
       <div class="game-layout">
-        <!-- Columna Izquierda: Estantería -->
-        <div class="game-col col-tray glass-panel">
+        <!-- Columna Izquierda: Suministros -->
+        <div class="game-col col-tray">
           <div class="tray-header">
-            <h3>Suministros</h3>
-            <span class="hint-badge">Arrastra al bolso</span>
+            <h3>Disponibles</h3>
           </div>
           <div id="tray-list" class="items-grid custom-scroll">
             <!-- Items injectados -->
           </div>
         </div>
 
-        <!-- Columna Derecha: Zona de Armado -->
+        <!-- Columna Derecha: Bolso -->
         <div class="game-col col-bag">
           <div class="bag-visual-container">
-            <!-- Imagen de fondo de mochila se manejará por CSS o <img> -->
             <div class="backpack-bg">
               <div id="bag-list" class="bag-grid">
                 <!-- Slots -->
@@ -116,45 +122,53 @@
             </div>
             
             <div class="bag-controls">
-              <button id="btn-finish" class="btn btn-success btn-floating" disabled>
-                ✅ ¡Bolso Listo!
+              <button id="btn-check" class="btn btn-success btn-xl">
+                ¡LISTO!
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Feedback Flotante -->
+      <!-- Feedback Toast (Opcional, si se usa durante el juego) -->
       <div id="feedback-toast" class="toast hidden">
-        <div class="toast-icon"></div>
         <div class="toast-content">
-          <strong class="toast-title"></strong>
-          <span class="toast-msg"></span>
+          <strong class="toast-title">Info</strong>
+          <span class="toast-msg">Mensaje</span>
         </div>
       </div>
     </section>
 
-    <!-- PANTALLA 3: RESULTADOS -->
+    <!-- PANTALLA: DEBRIEF / FEEDBACK (2s) -->
+    <section id="screen-debrief" class="screen hidden">
+      <div class="debrief-result" id="debrief-text">¡EXCELENTE!</div>
+      <div class="debrief-icon" id="debrief-icon">✅</div>
+      <div class="debrief-info" id="debrief-info">+10 Puntos</div>
+    </section>
+
+    <!-- PANTALLA: PAUSA -->
+    <section id="screen-pause" class="screen hidden">
+      <div class="pause-menu glass-panel" style="padding: 40px; max-width: 400px;">
+        <h2 class="pause-title">PAUSA</h2>
+        <button id="btn-resume" class="btn btn-primary btn-lg">Continuar</button>
+        <button id="btn-practice-round" class="btn btn-secondary btn-lg">Practicar este juego</button>
+        <button id="btn-quit" class="btn btn-secondary btn-lg" style="color: var(--danger); border-color: var(--danger);">Salir al Menú</button>
+      </div>
+    </section>
+
+    <!-- PANTALLA 3: RESULTADOS (GAME OVER) -->
     <section id="screen-results" class="screen hidden">
       <div class="results-card glass-panel fade-in-up">
-        <div class="result-badge" id="result-emoji">🏆</div>
-        <h2 id="result-title">Análisis Completo</h2>
+        <div class="result-badge" id="result-emoji" style="font-size: 4rem;">🏆</div>
+        <h2 id="result-title" style="font-size: 2.5rem; margin-bottom: 20px;">Fin del Juego</h2>
         
-        <div class="score-circle">
-          <svg viewBox="0 0 36 36" class="circular-chart">
-            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <path id="score-circle-path" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-            <text x="18" y="20.35" class="percentage"><span id="final-score">0</span> pts</text>
-          </svg>
-        </div>
-
-        <div class="feedback-summary">
-          <div id="feedback-positive" class="feedback-item success"></div>
-          <div id="feedback-improvements" class="feedback-item warning"></div>
+        <div style="font-size: 1.5rem; margin-bottom: 20px;">
+          Puntaje Final: <strong id="final-score" style="color: var(--primary); font-size: 2.5rem;">0</strong>
         </div>
 
         <div class="actions">
-          <button id="btn-retry" class="btn btn-secondary btn-lg">🔄 Intentar de nuevo</button>
+          <button id="btn-retry" class="btn btn-primary btn-xl">🔄 Jugar de Nuevo</button>
+          <button id="btn-home" class="btn btn-secondary btn-lg" style="margin-top: 10px;">🏠 Inicio</button>
         </div>
       </div>
     </section>
