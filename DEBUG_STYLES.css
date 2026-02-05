@@ -1,0 +1,218 @@
+/* 
+   Mobile Development Debug Styles
+   Uncomment para visualizar las mejoras responsivas durante desarrollo
+*/
+
+/* 
+   1. Mostrar áreas de toque (touch targets)
+   Descomenta para ver donde están los 44px min-height areas
+*/
+/*
+.btn,
+.item-card,
+.scenario-pill,
+.timer-pill,
+input[type="text"],
+input[type="email"],
+button {
+  outline: 2px dashed rgba(203, 52, 140, 0.5) !important;
+  outline-offset: -2px;
+}
+
+.btn::after {
+  outline: 1px solid rgba(0, 143, 76, 0.3);
+  position: absolute;
+  inset: -8px;
+}
+*/
+
+/*
+   2. Mostrar breakpoints actuales
+   Descomenta para ver a qué breakpoint estás
+*/
+/*
+html::before {
+  content: attr(data-width);
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #00da2c;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-weight: 900;
+  border-radius: 6px;
+  z-index: 9999;
+  font-family: monospace;
+}
+
+@media (max-width: 480px) {
+  html::before { content: "📱 Mobile (320-480px)"; }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  html::before { content: "📱 Mobile (481-767px)"; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  html::before { content: "📱 Tablet (768-1023px)"; }
+}
+
+@media (min-width: 1024px) {
+  html::before { content: "🖥️ Desktop (1024px+)"; }
+}
+*/
+
+/*
+   3. Mostrar grid de espaciado (8pt system)
+   Descomenta para visualizar el sistema de espaciado
+*/
+/*
+body {
+  background-image: 
+    linear-gradient(0deg, transparent 23px, rgba(0, 143, 76, 0.1) 24px),
+    linear-gradient(90deg, transparent 23px, rgba(0, 143, 76, 0.1) 24px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+}
+
+body::before {
+  content: "8pt Grid Enabled";
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 143, 76, 0.9);
+  color: white;
+  padding: 8px 12px;
+  font-size: 11px;
+  border-radius: 4px;
+  z-index: 9999;
+}
+*/
+
+/*
+   4. Highlighter para Safe Areas (iOS)
+   Descomenta para ver los safe areas en dispositivos con notch
+*/
+/*
+body {
+  border-top: max(0px, env(safe-area-inset-top)) solid rgba(255, 0, 0, 0.3);
+  border-bottom: max(0px, env(safe-area-inset-bottom)) solid rgba(255, 0, 0, 0.3);
+  border-left: max(0px, env(safe-area-inset-left)) solid rgba(255, 0, 0, 0.3);
+  border-right: max(0px, env(safe-area-inset-right)) solid rgba(255, 0, 0, 0.3);
+}
+*/
+
+/*
+   5. Mostrar áreas de scroll
+   Descomenta para visualizar zonas con scroll habilitado
+*/
+/*
+[style*="overflow"]:not(.hidden) {
+  outline: 2px dashed rgba(255, 193, 7, 0.6) !important;
+  outline-offset: -2px;
+}
+
+.col-tray {
+  outline: 3px dashed rgba(255, 193, 7, 0.8) !important;
+  outline-offset: -3px;
+}
+*/
+
+/*
+   6. Aspect Ratio Checker
+   Descomenta para ver aspect-ratios de imágenes
+*/
+/*
+img {
+  outline: 1px dashed rgba(52, 211, 153, 0.4);
+}
+
+img[aspect-ratio] {
+  outline: 1px dashed rgba(34, 197, 94, 0.8) !important;
+}
+*/
+
+/*
+   7. Font size visualization
+   Descomenta para ver tamaños de font en mobile
+*/
+/*
+p, span, div {
+  outline: 1px dashed rgba(59, 130, 246, 0.2);
+}
+
+body {
+  outline: none;
+}
+*/
+
+/*
+   8. CLS Detection (Layout Shift)
+   Descomenta para detectar layout shifts
+*/
+/*
+.item-card,
+img,
+.btn {
+  background-color: rgba(0, 143, 76, 0.05) !important;
+  transition: background-color 0.3s;
+}
+*/
+
+/* 
+   DEBUG CONSOLE HELPER 
+   Para usar en Console del navegador:
+   
+   // Ver viewport actual
+   console.log(`Viewport: ${window.innerWidth}x${window.innerHeight}`);
+   
+   // Ver si es touch device
+   console.log(`Touch device: ${('ontouchstart' in window)}`);
+   
+   // Ver safe areas
+   console.log(`Safe areas:`, {
+     top: 'env(safe-area-inset-top)',
+     bottom: 'env(safe-area-inset-bottom)',
+     left: 'env(safe-area-inset-left)',
+     right: 'env(safe-area-inset-right)'
+   });
+   
+   // Ver elemento más grande (LCP)
+   console.log('Elements:', document.querySelectorAll('img, h1, h2'));
+   
+   // Medir touch target
+   document.querySelectorAll('.btn').forEach(btn => {
+     const rect = btn.getBoundingClientRect();
+     console.log(`Button: ${rect.width}x${rect.height}px`);
+   });
+*/
+
+/* 
+   PERFORMANCE TESTING 
+   Ejecuta en Console:
+   
+   // Medir LCP (Largest Contentful Paint)
+   const observer = new PerformanceObserver((list) => {
+     list.getEntries().forEach((entry) => {
+       console.log('LCP:', entry.renderTime || entry.loadTime);
+     });
+   });
+   observer.observe({entryTypes: ['largest-contentful-paint']});
+   
+   // Medir CLS (Cumulative Layout Shift)
+   const clsObserver = new PerformanceObserver((list) => {
+     list.getEntries().forEach((entry) => {
+       console.log('CLS:', entry.value);
+     });
+   });
+   clsObserver.observe({entryTypes: ['layout-shift']});
+   
+   // Medir INP (Interaction to Next Paint)
+   const inpObserver = new PerformanceObserver((list) => {
+     list.getEntries().forEach((entry) => {
+       console.log('INP:', entry.duration);
+     });
+   });
+   inpObserver.observe({entryTypes: ['event']});
+*/

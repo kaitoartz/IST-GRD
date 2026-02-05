@@ -10,7 +10,7 @@ import {
   getItemsForScenario
 } from './state.js';
 import * as UI from '../ui/ui.js';
-import { initDragDrop, setupClickHandlers } from '../interaction/dragdrop.js';
+import { setupClickHandlers } from '../interaction/dragdrop.js';
 import { bagAnimator } from '../ui/bagAnimation.js';
 
 let ALL_ITEMS = [];
@@ -37,10 +37,31 @@ async function loadData() {
 
 // --- Game Loop Control ---
 
+function showTutorial() {
+  const tutorial = document.getElementById('tutorial-popup');
+  if (tutorial) {
+    tutorial.classList.remove('hidden');
+    // Ensure button inside tutorial also has its listener (redundant but safe)
+    const btn = document.getElementById('btn-close-tutorial');
+    if (btn && !btn.dataset.listenerAttached) {
+      btn.addEventListener('click', proceedToGame);
+      btn.dataset.listenerAttached = "true";
+    }
+  }
+}
+
 function startGame() {
-  initGame('challenge', ALL_ITEMS, ALL_SCENARIOS);
+  showTutorial();
+}
+
+function proceedToGame() {
+  console.log('Proceeding to game...');
+  const tutorial = document.getElementById('tutorial-popup');
+  if (tutorial) {
+    tutorial.classList.add('hidden');
+  }
   
-  // Start First Round
+  initGame('challenge', ALL_ITEMS, ALL_SCENARIOS);
   runPhase('briefing');
 }
 
@@ -129,8 +150,7 @@ function setupAction() {
   state.timeLeft = getRoundTime();
   UI.updateHUD();
   
-  // Initialize drag-drop handlers for this round (después de renderizar)
-  initDragDrop();
+  // Initialize interaction handlers for this round
   setupClickHandlers();
 }
 
@@ -195,10 +215,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   UI.renderLeaderboard();
   
   // Navigation
-  document.getElementById('btn-start').addEventListener('click', startGame);
-  document.getElementById('btn-retry').addEventListener('click', () => {
-    UI.showScreen('intro');
-  });
+  const btnStart = document.getElementById('btn-start');
+  const btnCloseTutorial = document.getElementById('btn-close-tutorial');
+  const btnRetry = document.getElementById('btn-retry');
+
+  if (btnStart) btnStart.addEventListener('click', startGame);
+  if (btnCloseTutorial) btnCloseTutorial.addEventListener('click', proceedToGame);
+  
+  if (btnRetry) {
+    btnRetry.addEventListener('click', () => {
+      startGame();
+    });
+  }
   document.getElementById('btn-home').addEventListener('click', () => {
     UI.showScreen('intro');
   });
@@ -221,8 +249,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  document.getElementById('btn-pause').addEventListener('click', togglePause);
-  document.getElementById('btn-resume').addEventListener('click', togglePause);
+  const pauseBtn = document.getElementById('btn-pause');
+  if (pauseBtn) pauseBtn.addEventListener('click', togglePause);
+
+  const resumeBtn = document.getElementById('btn-resume');
+  if (resumeBtn) resumeBtn.addEventListener('click', togglePause);
   
   document.getElementById('btn-quit').addEventListener('click', () => {
     togglePause();

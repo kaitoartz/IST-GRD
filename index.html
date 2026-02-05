@@ -13,7 +13,6 @@
   <link rel="stylesheet" href="grd-bag-game/public/css/styles.css">
   
   <!-- Librerías -->
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" defer></script>
 </head>
@@ -33,6 +32,35 @@
 
   <main class="app-container" id="main-content">
     
+    <!-- Tutorial Popup (Formerly bag-empty-state) -->
+    <div id="tutorial-popup" class="tutorial-overlay hidden">
+      <div class="tutorial-card glass-panel fade-in">
+        <div class="tutorial-header">
+          <span class="tutorial-icon">🎒</span>
+          <h2>¿Cómo jugar?</h2>
+        </div>
+        <div class="tutorial-body">
+          <div class="step">
+            <span class="step-num">1</span>
+            <p>Observa el <strong>Escenario de Emergencia</strong> en la parte superior.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <p>Haz <strong>clic</strong> en los suministros que consideres más importantes.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <p>Identifica lo <span class="badge vital">VITAL</span>, lo <span class="badge extra">EXTRA</span> y evita el <span class="badge lujo">LUJO</span>.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">4</span>
+            <p>¡Tienes poco tiempo! Completa tu bolso de 8 ítems y presiona <strong>¡LISTO!</strong></p>
+          </div>
+        </div>
+        <button id="btn-close-tutorial" class="btn btn-primary btn-lg">¡ENTENDIDO!</button>
+      </div>
+    </div>
+
     <!-- PANTALLA 1: INTRO -->
     <section id="screen-intro" class="screen active">
       <div class="intro-card glass-panel">
@@ -68,23 +96,23 @@
     <section id="screen-game" class="screen hidden">
       <header class="game-header">
         <div class="logo-area">
-          <button id="btn-pause" class="btn btn-secondary btn-pause" aria-label="Pausar juego">⏸️</button>
-          <span class="logo-text">IST <strong>GRD</strong></span>
+          <img src="grd-bag-game/public/assets/images/Logo_IST_Educa.png" alt="IST Educa" class="logo-img" width="140" height="48" loading="lazy">
+        </div>
+
+        <div id="scenario-pill" class="level-pill centered">
+          ESCENARIO
         </div>
 
         <div class="hud-stats">
-          <div id="scenario-pill" class="level-pill">
-            ESCENARIO
-          </div>
           <div id="level-pill" class="level-pill">
             NIVEL <span id="level-val">1</span>
           </div>
 
           <!-- Solo visible en desafío -->
           <div id="lives-container" class="lives-display hidden">
-            <span class="life-heart">❤️</span>
-            <span class="life-heart">❤️</span>
-            <span class="life-heart">❤️</span>
+            <span class="life-heart">💜</span>
+            <span class="life-heart">💜</span>
+            <span class="life-heart">💜</span>
           </div>
           
           <div class="timer-pill" id="timer-display">
@@ -114,10 +142,6 @@
               </div>
               <div id="bag-items-preview" class="bag-items-preview">
                 <!-- Items se mostrarán aquí como thumbnails -->
-              </div>
-              <div id="bag-empty-state" class="bag-empty">
-                <p>Arrastra o haz clic en los ítems para agregarlos</p>
-                <p class="hint">Identifica lo vital para tu emergencia</p>
               </div>
             </div>
             

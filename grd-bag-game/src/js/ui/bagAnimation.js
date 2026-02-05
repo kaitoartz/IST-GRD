@@ -22,7 +22,6 @@ export class BagAnimator {
     this.backpackImg = document.getElementById('backpack-img');
     this.bagCounter = document.getElementById('bag-count');
     this.itemsPreview = document.getElementById('bag-items-preview');
-    this.emptyState = document.getElementById('bag-empty-state');
     
     if (!this.backpackImg || !this.bagCounter || !this.itemsPreview) {
       console.warn('BagAnimator: Some DOM elements not found yet');
@@ -87,32 +86,6 @@ export class BagAnimator {
   }
 
   /**
-   * Animación para cuando se SUELTA un item (drag & drop) en la mochila
-   * @param {HTMLElement} itemElement - El elemento que se soltó
-   * @param {Object} itemData - Datos del item
-   */
-  async animateDropToBag(itemElement, itemData) {
-    if (!this.initialized) this.init();
-    
-    // Animación de "entrar" en la mochila (escala hacia 0 y desaparece)
-    const animation = anime({
-      targets: itemElement,
-      scale: [1, 0],
-      opacity: [1, 0],
-      translateY: 30, // Se "hunde" un poco
-      rotate: '15deg',
-      duration: 400,
-      easing: 'easeInBack'
-    });
-
-    await animation.finished;
-    // El elemento será removido por el llamador (Sortablejs onAdd)
-    
-    this.addItemToBag(itemData);
-    this.animateBackpack('glow');
-  }
-
-  /**
    * Añade un item a la lista interna y actualiza UI
    */
   addItemToBag(itemData) {
@@ -172,11 +145,6 @@ export class BagAnimator {
     if (!this.initialized) this.init();
     if (!this.itemsPreview) return;
     
-    // Toggle empty state message
-    if (this.emptyState) {
-      this.emptyState.style.display = this.itemsInBag.length > 0 ? 'none' : 'block';
-    }
-
     this.itemsPreview.innerHTML = '';
 
     this.itemsInBag.forEach((item, index) => {
@@ -276,7 +244,6 @@ export class BagAnimator {
         this.itemsInBag = [];
         this.updateCounter();
         this.itemsPreview.innerHTML = '';
-        if (this.emptyState) this.emptyState.style.display = 'block';
       }
     });
   }
