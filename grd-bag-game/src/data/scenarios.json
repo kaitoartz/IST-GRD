@@ -1,0 +1,42 @@
+[
+  {
+    "id": "terremoto",
+    "name": "Terremoto",
+    "icon": "🌋",
+    "description": "Movimiento sísmico fuerte. Prepárate para evacuar rápido.",
+    "briefingText": "¡TERREMOTO! Empaca lo esencial",
+    "essentialItems": ["water", "food", "flashlight", "batteries", "medkit", "whistle", "radio", "documents"],
+    "recommendedItems": ["mask", "blanket", "money", "keys"],
+    "forbiddenItems": ["laptop", "hairdryer", "novel", "plushie"]
+  },
+  {
+    "id": "incendio",
+    "name": "Incendio Forestal",
+    "icon": "🔥",
+    "description": "Fuego cerca. Evacuación inmediata con protección respiratoria.",
+    "briefingText": "¡INCENDIO! Sal rápido y seguro",
+    "essentialItems": ["water", "food", "medkit", "documents", "mask"],
+    "recommendedItems": ["flashlight", "batteries", "whistle", "radio", "keys"],
+    "forbiddenItems": ["blanket", "money", "laptop", "hairdryer", "novel", "plushie"]
+  },
+  {
+    "id": "inundacion",
+    "name": "Inundación",
+    "icon": "🌊",
+    "description": "Nivel de agua subiendo. Busca zona alta con suministros.",
+    "briefingText": "¡INUNDACIÓN! Protege documentos",
+    "essentialItems": ["water", "food", "flashlight", "batteries", "medkit", "radio", "documents"],
+    "recommendedItems": ["whistle", "blanket", "keys"],
+    "forbiddenItems": ["mask", "money", "laptop", "hairdryer", "novel", "plushie"]
+  },
+  {
+    "id": "apagon",
+    "name": "Apagón Prolongado",
+    "icon": "🔦",
+    "description": "Sin electricidad por días. Prepara iluminación y comunicación.",
+    "briefingText": "¡APAGÓN! Luz y contacto vital",
+    "essentialItems": ["water", "food", "flashlight", "batteries", "radio", "money"],
+    "recommendedItems": ["medkit", "blanket", "novel"],
+    "forbiddenItems": ["whistle", "documents", "mask", "keys", "laptop", "hairdryer", "plushie"]
+  }
+]

@@ -1,0 +1,67 @@
+# Archivos a ignorar en Git
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Entornos virtuales
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Node modules (si se usa npm en el futuro)
+node_modules/
+package-lock.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporales
+.tmp/
+temp/
+*.bak
+*.orig
+
+# Sistema
+.env
+.env.local
+.env.*.local
+
+# Outputs/Generated
+results/
+outputs/
+*.tmp
+
+# Audio temporal (mientras no estén los sonidos reales)
+# Comentar cuando se tengan sonidos profesionales
+# public/assets/audio/*.wav

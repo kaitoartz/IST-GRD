@@ -2,71 +2,56 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prepara tu Bolso de Emergencia - IST GRD</title>
   
-  <!-- Fonts: Rubik (Moderno y Friendly) -->
+  <!-- Fonts: Lato (Bold) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="grd-bag-game/public/css/styles.css">
   
   <!-- Librerías -->
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" defer></script>
 </head>
 <body>
 
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
   <!-- Audio Manager -->
   <div id="audio-assets" style="display:none;">
-    <audio id="sfx-pop" src="assets/audio/pop.mp3" preload="auto"></audio>
-    <audio id="sfx-error" src="assets/audio/error.mp3" preload="auto"></audio>
-    <audio id="sfx-success" src="assets/audio/success.mp3" preload="auto"></audio>
-    <!-- New sounds placeholders -->
-    <!-- <audio id="sfx-tick" src="assets/audio/tick.mp3" preload="auto"></audio> -->
+    <audio id="sfx-pop" src="grd-bag-game/public/assets/audio/pop.wav" preload="auto"></audio>
+    <audio id="sfx-error" src="grd-bag-game/public/assets/audio/error.wav" preload="auto"></audio>
+    <audio id="sfx-success" src="grd-bag-game/public/assets/audio/success.wav" preload="auto"></audio>
+    <audio id="sfx-tick" src="grd-bag-game/public/assets/audio/tick.wav" preload="auto"></audio>
   </div>
 
   <div class="background-pattern"></div>
 
-  <main class="app-container">
+  <main class="app-container" id="main-content">
     
     <!-- PANTALLA 1: INTRO -->
     <section id="screen-intro" class="screen active">
       <div class="intro-card glass-panel">
-        <img src="assets/images/intro_hero.png" alt="Kit de Emergencia" class="intro-hero-img">
+        <img src="grd-bag-game/public/assets/images/intro_hero.png" alt="Kit de Emergencia" class="intro-hero-img" width="200" height="200" fetchpriority="high">
         <h1 class="title-main">Tu Bolso de<br>Emergencia</h1>
         <p class="intro-text">
-          Aprende a identificar lo indispensable en segundos.
-          <br><span class="highlight-text">Elige tu experiencia:</span>
+          Aprende a identificar lo indispensable en segundos ante cualquier desastre.
         </p>
         
-        <div class="mode-selector">
-          <label class="mode-option">
-            <input type="radio" name="gameMode" value="calm" checked>
-            <div class="mode-card">
-              <span class="emoji">🧘</span>
-              <div class="text">
-                <strong>Modo Calma</strong>
-                <small>Sin prisa. Música tranquila. Práctica sin fin.</small>
-              </div>
-            </div>
-          </label>
-          <label class="mode-option">
-            <input type="radio" name="gameMode" value="challenge">
-            <div class="mode-card">
-              <span class="emoji">⚡</span>
-              <div class="text">
-                <strong>Modo Desafío</strong>
-                <small>¡Velocidad! 3 Vidas. Niveles rápidos.</small>
-              </div>
-            </div>
-          </label>
-        </div>
-
         <button id="btn-start" class="btn btn-primary btn-xl pulse-anim">
-          COMENZAR
+          ¡JUGAR!
         </button>
+
+        <div class="leaderboard-mini">
+          <h3>🏆 Mejores Puntajes</h3>
+          <ul id="leaderboard-intro" class="leaderboard-list">
+            <!-- Cargado dinámicamente -->
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -75,7 +60,7 @@
       <div class="briefing-content">
         <div class="briefing-title">PREPARADOS...</div>
         <div id="briefing-task" class="briefing-task">¡EMPACA LO VITAL!</div>
-        <div id="briefing-timer" style="font-size: 2rem;">3</div>
+        <div id="briefing-timer" class="timer-countdown">3</div>
       </div>
     </section>
 
@@ -83,11 +68,18 @@
     <section id="screen-game" class="screen hidden">
       <header class="game-header">
         <div class="logo-area">
-          <button id="btn-pause" class="btn btn-secondary" style="padding: 5px 15px; font-size: 1.2rem;">⏸️</button>
+          <button id="btn-pause" class="btn btn-secondary btn-pause" aria-label="Pausar juego">⏸️</button>
           <span class="logo-text">IST <strong>GRD</strong></span>
         </div>
 
         <div class="hud-stats">
+          <div id="scenario-pill" class="level-pill">
+            ESCENARIO
+          </div>
+          <div id="level-pill" class="level-pill">
+            NIVEL <span id="level-val">1</span>
+          </div>
+
           <!-- Solo visible en desafío -->
           <div id="lives-container" class="lives-display hidden">
             <span class="life-heart">❤️</span>
@@ -115,9 +107,17 @@
         <!-- Columna Derecha: Bolso -->
         <div class="game-col col-bag">
           <div class="bag-visual-container">
-            <div class="backpack-bg">
-              <div id="bag-list" class="bag-grid">
-                <!-- Slots -->
+            <div class="backpack-visual">
+              <img src="grd-bag-game/public/assets/images/backpack_bg.png" alt="Mochila de emergencia" class="backpack-img" id="backpack-img" width="400" height="400" loading="lazy">
+              <div id="bag-counter" class="bag-counter">
+                <span id="bag-count">0</span>/8
+              </div>
+              <div id="bag-items-preview" class="bag-items-preview">
+                <!-- Items se mostrarán aquí como thumbnails -->
+              </div>
+              <div id="bag-empty-state" class="bag-empty">
+                <p>Arrastra o haz clic en los ítems para agregarlos</p>
+                <p class="hint">Identifica lo vital para tu emergencia</p>
               </div>
             </div>
             
@@ -148,33 +148,44 @@
 
     <!-- PANTALLA: PAUSA -->
     <section id="screen-pause" class="screen hidden">
-      <div class="pause-menu glass-panel" style="padding: 40px; max-width: 400px;">
+      <div class="pause-menu glass-panel">
         <h2 class="pause-title">PAUSA</h2>
         <button id="btn-resume" class="btn btn-primary btn-lg">Continuar</button>
         <button id="btn-practice-round" class="btn btn-secondary btn-lg">Practicar este juego</button>
-        <button id="btn-quit" class="btn btn-secondary btn-lg" style="color: var(--danger); border-color: var(--danger);">Salir al Menú</button>
+        <button id="btn-quit" class="btn btn-secondary btn-lg btn-quit">Salir al Menú</button>
       </div>
     </section>
 
     <!-- PANTALLA 3: RESULTADOS (GAME OVER) -->
     <section id="screen-results" class="screen hidden">
       <div class="results-card glass-panel fade-in-up">
-        <div class="result-badge" id="result-emoji" style="font-size: 4rem;">🏆</div>
-        <h2 id="result-title" style="font-size: 2.5rem; margin-bottom: 20px;">Fin del Juego</h2>
+        <div class="result-badge" id="result-emoji">🏆</div>
+        <h2 id="result-title">Fin del Juego</h2>
         
-        <div style="font-size: 1.5rem; margin-bottom: 20px;">
-          Puntaje Final: <strong id="final-score" style="color: var(--primary); font-size: 2.5rem;">0</strong>
+        <div class="final-score-container">
+          Puntaje Final: <strong id="final-score">0</strong>
+        </div>
+
+        <div id="high-score-form" class="high-score-form hidden">
+          <p>¡Nuevo Récord!</p>
+          <input type="text" id="player-name" placeholder="Tu Nombre" maxlength="15">
+          <button id="btn-save-score" class="btn btn-primary">Guardar</button>
+        </div>
+
+        <div class="results-leaderboard">
+          <h3>Top 5</h3>
+          <ul id="leaderboard-results" class="leaderboard-list"></ul>
         </div>
 
         <div class="actions">
           <button id="btn-retry" class="btn btn-primary btn-xl">🔄 Jugar de Nuevo</button>
-          <button id="btn-home" class="btn btn-secondary btn-lg" style="margin-top: 10px;">🏠 Inicio</button>
+          <button id="btn-home" class="btn btn-secondary btn-lg home-btn">🏠 Inicio</button>
         </div>
       </div>
     </section>
 
   </main>
 
-  <script type="module" src="js/main.js"></script>
+  <script type="module" src="grd-bag-game/src/js/core/main.js"></script>
 </body>
 </html>

@@ -5,23 +5,32 @@ import {
   startRound,
   calculateRoundScore,
   getRoundTime,
-  loseLife
+  loseLife,
+  Leaderboard,
+  getItemsForScenario
 } from './state.js';
-import * as UI from './ui.js';
-import { initDragDrop, setupClickHandlers } from './dragdrop.js';
+import * as UI from '../ui/ui.js';
+import { initDragDrop, setupClickHandlers } from '../interaction/dragdrop.js';
+import { bagAnimator } from '../ui/bagAnimation.js';
 
 let ALL_ITEMS = [];
+let ALL_SCENARIOS = [];
 let gameLoopInterval = null;
 
 // --- Initialization ---
 
 async function loadData() {
   try {
-    const response = await fetch('data/items.json');
-    ALL_ITEMS = await response.json();
+    const [itemsRes, scenariosRes] = await Promise.all([
+      fetch('grd-bag-game/src/data/items.json'),
+      fetch('grd-bag-game/src/data/scenarios.json')
+    ]);
+    ALL_ITEMS = await itemsRes.json();
+    ALL_SCENARIOS = await scenariosRes.json();
     console.log('Items loaded:', ALL_ITEMS.length);
+    console.log('Scenarios loaded:', ALL_SCENARIOS.length);
   } catch (e) {
-    console.error('Error loading items:', e);
+    console.error('Error loading data:', e);
     // Fallback UI error?
   }
 }
@@ -29,13 +38,7 @@ async function loadData() {
 // --- Game Loop Control ---
 
 function startGame() {
-  const modeInputs = document.getElementsByName('gameMode');
-  let selectedMode = 'calm';
-  for(const input of modeInputs) {
-    if(input.checked) selectedMode = input.value;
-  }
-
-  initGame(selectedMode, ALL_ITEMS);
+  initGame('challenge', ALL_ITEMS, ALL_SCENARIOS);
   
   // Start First Round
   runPhase('briefing');
@@ -90,26 +93,45 @@ function gameTick() {
 function setupBriefing() {
   UI.showScreen('briefing');
   state.timeLeft = CONFIG.BRIEFING_TIME;
-  UI.updateBriefing("¡EMPACA LO VITAL!", state.timeLeft);
   UI.playSound('pop');
 
-  // Prepare Round Data
+  // Prepare Round Data (Scenarios are chosen here)
   startRound();
   
-  // Randomize Items for the Tray (Simple shuffle for now)
-  const shuffled = [...state.items].sort(() => 0.5 - Math.random());
-  // Pick subset? No, show all or subset. Let's show all for now as per original.
-  // Or maybe a random subset to make it harder/easier?
-  // Original showed all. Let's stick to all but maybe re-ordered.
-  state.roundItems = shuffled;
+  const scenarioText = state.currentScenario 
+    ? `${state.currentScenario.icon} ${state.currentScenario.briefingText || state.currentScenario.name}`
+    : "¡PREPÁRATE!";
+  
+  UI.updateBriefing(scenarioText, state.timeLeft);
+  bagAnimator.clearBag();
+  
+  // Filtrar items relevantes al escenario actual
+  const scenarioItems = state.currentScenario 
+    ? getItemsForScenario(state.currentScenario)
+    : state.items;
+  
+  // Randomize Items for the Tray: WarioWare style (Subset of items)
+  // Show 10-12 items from scenario-relevant items
+  const shuffled = [...scenarioItems].sort(() => 0.5 - Math.random());
+  state.roundItems = shuffled.slice(0, Math.min(12, scenarioItems.length)); 
+  
   UI.renderTray(state.roundItems);
   UI.renderBag(state.items); // Reset Bag UI
 }
 
 function setupAction() {
   UI.showScreen('game');
+  
+  // Renderizar contenido del juego
+  UI.renderTray(state.roundItems);
+  UI.renderBag(state.items);
+  
   state.timeLeft = getRoundTime();
   UI.updateHUD();
+  
+  // Initialize drag-drop handlers for this round (después de renderizar)
+  initDragDrop();
+  setupClickHandlers();
 }
 
 function setupDebrief() {
@@ -145,16 +167,9 @@ function finishRound(timeUp = false) {
 
 function nextRound() {
   // Check End Game Conditions
-  if (state.mode === 'challenge' && state.lives <= 0) {
+  if (state.lives <= 0) {
     runPhase('results');
     return;
-  }
-  
-  if (state.mode === 'tutorial') {
-    if (state.level >= CONFIG.MODES.tutorial.times.length) {
-      runPhase('results'); // Completed all tutorial levels
-      return;
-    }
   }
   
   // Advance Level
@@ -177,10 +192,8 @@ function togglePause() {
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadData();
+  UI.renderLeaderboard();
   
-  initDragDrop();
-  setupClickHandlers();
-
   // Navigation
   document.getElementById('btn-start').addEventListener('click', startGame);
   document.getElementById('btn-retry').addEventListener('click', () => {
@@ -188,6 +201,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   document.getElementById('btn-home').addEventListener('click', () => {
     UI.showScreen('intro');
+  });
+
+  // Leaderboard save
+  document.getElementById('btn-save-score').addEventListener('click', () => {
+    const nameInput = document.getElementById('player-name');
+    if (nameInput) {
+      Leaderboard.saveScore(nameInput.value, state.score);
+      document.getElementById('high-score-form').classList.add('hidden');
+      UI.renderLeaderboard();
+      UI.showFeedback('¡Guardado!', 'Tu puntaje está en el Top 5', 'success');
+    }
   });
 
   // Game Controls

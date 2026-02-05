@@ -1,0 +1,61 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Definir gradientes -->
+  <defs>
+    <linearGradient id="bagGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pocketGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EA580C;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="innerGlow">
+      <stop offset="0%" style="stop-color:#EFF6FF;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#DBEAFE;stop-opacity:0.3" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Sombra -->
+  <ellipse cx="200" cy="380" rx="150" ry="15" fill="rgba(0,0,0,0.15)" />
+  
+  <!-- Cuerpo principal de la mochila -->
+  <path d="M 100 120 Q 90 140, 90 160 L 90 320 Q 90 350, 120 360 L 280 360 Q 310 350, 310 320 L 310 160 Q 310 140, 300 120 Z" 
+        fill="url(#bagGradient)" 
+        stroke="#1E3A8A" 
+        stroke-width="4"/>
+  
+  <!-- Interior abierto (boca de la mochila) -->
+  <ellipse cx="200" cy="120" rx="100" ry="40" fill="url(#innerGlow)" stroke="#1E3A8A" stroke-width="4"/>
+  
+  <!-- Bolsillo frontal pequeño -->
+  <path d="M 140 180 Q 130 185, 130 195 L 130 250 Q 130 265, 145 270 L 255 270 Q 270 265, 270 250 L 270 195 Q 270 185, 260 180 Z" 
+        fill="url(#pocketGradient)" 
+        stroke="#C2410C" 
+        stroke-width="3"/>
+  
+  <!-- Zipper del bolsillo -->
+  <line x1="145" y1="180" x2="255" y2="180" stroke="#78350F" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="145" cy="180" r="5" fill="#FBBF24"/>
+  
+  <!-- Tirantes (straps) -->
+  <rect x="95" y="100" width="20" height="80" rx="10" fill="#60A5FA" stroke="#1E40AF" stroke-width="2"/>
+  <rect x="285" y="100" width="20" height="80" rx="10" fill="#60A5FA" stroke="#1E40AF" stroke-width="2"/>
+  
+  <!-- Hebillas -->
+  <rect x="97" y="120" width="16" height="12" rx="2" fill="none" stroke="#1E3A8A" stroke-width="2"/>
+  <rect x="287" y="120" width="16" height="12" rx="2" fill="none" stroke="#1E3A8A" stroke-width="2"/>
+  
+  <!-- Asa superior -->
+  <path d="M 160 80 Q 200 50, 240 80" 
+        fill="none" 
+        stroke="#1E40AF" 
+        stroke-width="12" 
+        stroke-linecap="round"/>
+  
+  <!-- Detalles de costuras -->
+  <line x1="95" y1="140" x2="95" y2="330" stroke="#1E3A8A" stroke-width="2" stroke-dasharray="5,5" opacity="0.5"/>
+  <line x1="305" y1="140" x2="305" y2="330" stroke="#1E3A8A" stroke-width="2" stroke-dasharray="5,5" opacity="0.5"/>
+  
+  <!-- Reflejo de luz -->
+  <ellipse cx="140" cy="160" rx="30" ry="50" fill="white" opacity="0.2"/>
+</svg>

@@ -1,0 +1,194 @@
+[
+  {
+    "id": "water",
+    "name": "Agua",
+    "icon": "grd-bag-game/public/assets/icons/water.webp",
+    "feedback": "El agua es vital para cualquier emergencia (2L al día).",
+    "scenarios": {
+      "terremoto": "E",
+      "incendio": "E",
+      "inundacion": "E",
+      "apagon": "E"
+    }
+  },
+  {
+    "id": "food",
+    "name": "Comida",
+    "icon": "grd-bag-game/public/assets/icons/food.webp",
+    "feedback": "Alimentos no perecibles son básicos para resistir.",
+    "scenarios": {
+      "terremoto": "E",
+      "incendio": "E",
+      "inundacion": "E",
+      "apagon": "E"
+    }
+  },
+  {
+    "id": "flashlight",
+    "name": "Linterna",
+    "icon": "grd-bag-game/public/assets/icons/flashlight.webp",
+    "feedback": "Vital si hay corte de luz o debes evacuar de noche.",
+    "scenarios": {
+      "terremoto": "E",
+      "incendio": "R",
+      "inundacion": "E",
+      "apagon": "E"
+    }
+  },
+  {
+    "id": "batteries",
+    "name": "Pilas",
+    "icon": "grd-bag-game/public/assets/icons/batteries.webp",
+    "feedback": "Para la linterna y radio. Siempre ten repuestos.",
+    "scenarios": {
+      "terremoto": "E",
+      "incendio": "R",
+      "inundacion": "E",
+      "apagon": "E"
+    }
+  },
+  {
+    "id": "medkit",
+    "name": "Botiquín",
+    "icon": "grd-bag-game/public/assets/icons/medkit.webp",
+    "feedback": "Básico para primeros auxilios y heridas leves.",
+    "scenarios": {
+      "terremoto": "E",
+      "incendio": "E",
+      "inundacion": "E",
+      "apagon": "R"
+    }
+  },
+  {
+    "id": "whistle",
+    "name": "Silbato",
+    "icon": "grd-bag-game/public/assets/icons/whistle.webp",
+    "feedback": "Para pedir ayuda en caso de quedar atrapado.",
+    "scenarios": {
+      "terremoto": "E",
+      "incendio": "R",
+      "inundacion": "R",
+      "apagon": "N"
+    }
+  },
+  {
+    "id": "radio",
+    "name": "Radio",
+    "icon": "grd-bag-game/public/assets/icons/radio.webp",
+    "feedback": "Para informarte si caen las redes de celular.",
+    "scenarios": {
+      "terremoto": "E",
+      "incendio": "R",
+      "inundacion": "E",
+      "apagon": "E"
+    }
+  },
+  {
+    "id": "documents",
+    "name": "Documentos",
+    "icon": "grd-bag-game/public/assets/icons/documents.webp",
+    "feedback": "Identificación importante en bolsa hermética.",
+    "scenarios": {
+      "terremoto": "E",
+      "incendio": "E",
+      "inundacion": "E",
+      "apagon": "N"
+    }
+  },
+  {
+    "id": "mask",
+    "name": "Mascarilla",
+    "icon": "grd-bag-game/public/assets/icons/mask.webp",
+    "feedback": "Especialmente vital en incendios por el humo.",
+    "scenarios": {
+      "terremoto": "R",
+      "incendio": "E",
+      "inundacion": "N",
+      "apagon": "N"
+    }
+  },
+  {
+    "id": "blanket",
+    "name": "Manta",
+    "icon": "grd-bag-game/public/assets/icons/blanket.webp",
+    "feedback": "Contra el frío, pero en incendios es estorbosa.",
+    "scenarios": {
+      "terremoto": "R",
+      "incendio": "N",
+      "inundacion": "R",
+      "apagon": "R"
+    }
+  },
+  {
+    "id": "money",
+    "name": "Efectivo",
+    "icon": "grd-bag-game/public/assets/icons/money.webp",
+    "feedback": "Útil si fallan los cajeros o red eléctrica.",
+    "scenarios": {
+      "terremoto": "R",
+      "incendio": "N",
+      "inundacion": "N",
+      "apagon": "E"
+    }
+  },
+  {
+    "id": "keys",
+    "name": "Llaves",
+    "icon": "grd-bag-game/public/assets/icons/keys.webp",
+    "feedback": "Copia de llaves es muy útil al evacuar rápido.",
+    "scenarios": {
+      "terremoto": "R",
+      "incendio": "R",
+      "inundacion": "R",
+      "apagon": "N"
+    }
+  },
+  {
+    "id": "laptop",
+    "name": "Laptop",
+    "icon": "grd-bag-game/public/assets/icons/laptop.webp",
+    "feedback": "Muy pesado y frágil. No ayuda a sobrevivir.",
+    "scenarios": {
+      "terremoto": "N",
+      "incendio": "N",
+      "inundacion": "N",
+      "apagon": "N"
+    }
+  },
+  {
+    "id": "hairdryer",
+    "name": "Secador",
+    "icon": "grd-bag-game/public/assets/icons/hairdryer.webp",
+    "feedback": "Sin electricidad no sirve. Ocupa mucho espacio.",
+    "scenarios": {
+      "terremoto": "N",
+      "incendio": "N",
+      "inundacion": "N",
+      "apagon": "N"
+    }
+  },
+  {
+    "id": "novel",
+    "name": "Libro Grueso",
+    "icon": "grd-bag-game/public/assets/icons/book.webp",
+    "feedback": "Añade peso innecesario. Prioriza seguridad.",
+    "scenarios": {
+      "terremoto": "N",
+      "incendio": "N",
+      "inundacion": "N",
+      "apagon": "R"
+    }
+  },
+  {
+    "id": "plushie",
+    "name": "Peluche",
+    "icon": "grd-bag-game/public/assets/icons/plushie.webp",
+    "feedback": "Ocupa espacio. Mejor algo muy pequeño si es necesario.",
+    "scenarios": {
+      "terremoto": "N",
+      "incendio": "N",
+      "inundacion": "N",
+      "apagon": "N"
+    }
+  }
+]
