@@ -1,0 +1,62 @@
+127.0.0.1 - - [05/Feb/2026 00:39:54] "GET /grd-bag-game/ HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:54] "GET /grd-bag-game/css/styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:54] "GET /grd-bag-game/assets/images/intro_hero.png HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:54] "GET /grd-bag-game/js/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:55] code 404, message File not found
+127.0.0.1 - - [05/Feb/2026 00:39:55] "GET /grd-bag-game/assets/audio/pop.mp3 HTTP/1.1" 404 -
+127.0.0.1 - - [05/Feb/2026 00:39:55] code 404, message File not found
+127.0.0.1 - - [05/Feb/2026 00:39:55] "GET /grd-bag-game/assets/audio/error.mp3 HTTP/1.1" 404 -
+127.0.0.1 - - [05/Feb/2026 00:39:55] "GET /grd-bag-game/assets/images/bg_texture.png HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:55] code 404, message File not found
+127.0.0.1 - - [05/Feb/2026 00:39:55] "GET /grd-bag-game/assets/audio/success.mp3 HTTP/1.1" 404 -
+127.0.0.1 - - [05/Feb/2026 00:39:55] "GET /grd-bag-game/js/state.js HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:55] "GET /grd-bag-game/js/dragdrop.js HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:55] "GET /grd-bag-game/js/ui.js HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:55] "GET /grd-bag-game/data/items.json HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/flashlight.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/food.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/water.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/mask.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/keys.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/book.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/whistle.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/blanket.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/plushie.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/money.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/batteries.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/documents.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/radio.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/medkit.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/laptop.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:39:56] "GET /grd-bag-game/assets/icons/hairdryer.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:05] "GET /grd-bag-game/ HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:05] "GET /grd-bag-game/css/styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/js/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/images/intro_hero.png HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] code 404, message File not found
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/audio/pop.mp3 HTTP/1.1" 404 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] code 404, message File not found
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/audio/success.mp3 HTTP/1.1" 404 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] code 404, message File not found
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/audio/error.mp3 HTTP/1.1" 404 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/images/bg_texture.png HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/js/ui.js HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/js/dragdrop.js HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/js/state.js HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/data/items.json HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/water.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/laptop.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/money.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/keys.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/blanket.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/batteries.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/medkit.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/hairdryer.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:06] "GET /grd-bag-game/assets/icons/documents.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:07] "GET /grd-bag-game/assets/icons/book.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:07] "GET /grd-bag-game/assets/icons/food.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:07] "GET /grd-bag-game/assets/icons/plushie.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:07] "GET /grd-bag-game/assets/icons/mask.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:07] "GET /grd-bag-game/assets/icons/flashlight.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:07] "GET /grd-bag-game/assets/icons/whistle.webp HTTP/1.1" 200 -
+127.0.0.1 - - [05/Feb/2026 00:41:07] "GET /grd-bag-game/assets/icons/radio.webp HTTP/1.1" 200 -
