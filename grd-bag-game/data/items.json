@@ -1,0 +1,146 @@
+[
+  {
+    "id": "water",
+    "name": "Agua",
+    "category": "E",
+    "points": 10,
+    "feedback": "El agua es vital. Se recomienda 2L por persona al día.",
+    "icon": "assets/icons/water.webp",
+    "tags": ["vital", "salud"]
+  },
+  {
+    "id": "food",
+    "name": "Comida",
+    "category": "E",
+    "points": 10,
+    "feedback": "Alimentos no perecibles y energéticos son esenciales.",
+    "icon": "assets/icons/food.webp",
+    "tags": ["vital", "energía"]
+  },
+  {
+    "id": "flashlight",
+    "name": "Linterna",
+    "category": "E",
+    "points": 10,
+    "feedback": "Imprescindible si hay corte de luz o es de noche.",
+    "icon": "assets/icons/flashlight.webp",
+    "tags": ["seguridad", "luz"]
+  },
+  {
+    "id": "batteries",
+    "name": "Pilas",
+    "category": "E",
+    "points": 10,
+    "feedback": "Para la linterna y radio. Siempre ten repuestos.",
+    "icon": "assets/icons/batteries.webp",
+    "tags": ["energía"]
+  },
+  {
+    "id": "medkit",
+    "name": "Botiquín",
+    "category": "E",
+    "points": 10,
+    "feedback": "Básico para primeros auxilios y medicamentos propios.",
+    "icon": "assets/icons/medkit.webp",
+    "tags": ["salud"]
+  },
+  {
+    "id": "whistle",
+    "name": "Silbato",
+    "category": "E",
+    "points": 10,
+    "feedback": "Sirve para pedir ayuda sin desgastar la voz.",
+    "icon": "assets/icons/whistle.webp",
+    "tags": ["rescate"]
+  },
+  {
+    "id": "radio",
+    "name": "Radio",
+    "category": "E",
+    "points": 10,
+    "feedback": "Para recibir información oficial de autoridades.",
+    "icon": "assets/icons/radio.webp",
+    "tags": ["comunicación"]
+  },
+  {
+    "id": "documents",
+    "name": "Documentos",
+    "category": "E",
+    "points": 10,
+    "feedback": "Identificación y papeles importantes en bolsa hermética.",
+    "icon": "assets/icons/documents.webp",
+    "tags": ["legal"]
+  },
+  {
+    "id": "mask",
+    "name": "Mascarilla",
+    "category": "R",
+    "points": 5,
+    "feedback": "Útil contra polvo o enfermedades, pero prioriza lo vital.",
+    "icon": "assets/icons/mask.webp",
+    "tags": ["salud"]
+  },
+  {
+    "id": "blanket",
+    "name": "Manta",
+    "category": "R",
+    "points": 5,
+    "feedback": "Ayuda contra el frío, pero ocupa mucho espacio.",
+    "icon": "assets/icons/blanket.webp",
+    "tags": ["abrigo"]
+  },
+  {
+    "id": "money",
+    "name": "Efectivo",
+    "category": "R",
+    "points": 5,
+    "feedback": "Recomendable tener efectivo chico a mano.",
+    "icon": "assets/icons/money.webp",
+    "tags": ["recursos"]
+  },
+  {
+    "id": "keys",
+    "name": "Llaves",
+    "category": "R",
+    "points": 5,
+    "feedback": "Copia de llaves de casa y auto es muy útil.",
+    "icon": "assets/icons/keys.webp",
+    "tags": ["acceso"]
+  },
+  {
+    "id": "laptop",
+    "name": "Laptop",
+    "category": "N",
+    "points": -5,
+    "feedback": "Muy pesado y frágil. No es esencial para sobrevivir.",
+    "icon": "assets/icons/laptop.webp",
+    "tags": ["lujo"]
+  },
+  {
+    "id": "hairdryer",
+    "name": "Secador",
+    "category": "N",
+    "points": -5,
+    "feedback": "Inútil sin electricidad y ocupa mucho espacio.",
+    "icon": "assets/icons/hairdryer.webp",
+    "tags": ["innecesario"]
+  },
+  {
+    "id": "novel",
+    "name": "Libro Grueso",
+    "category": "N",
+    "points": -5,
+    "feedback": "Añade peso innecesario. Prioriza la seguridad.",
+    "icon": "assets/icons/book.webp",
+    "tags": ["ocio"]
+  },
+  {
+    "id": "plushie",
+    "name": "Peluche",
+    "category": "N",
+    "points": -5,
+    "feedback": "Ocupa espacio vital. Quizás algo pequeño para niños.",
+    "icon": "assets/icons/plushie.webp",
+    "tags": ["ocio"]
+  }
+]
