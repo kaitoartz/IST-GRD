@@ -140,6 +140,26 @@ export function updateHUD() {
   const levelVal = document.getElementById('level-val');
   if (levelVal) levelVal.textContent = state.level;
 
+  // Vital Counter
+  const vitalVal = document.getElementById('vital-val');
+  const vitalTarget = document.getElementById('vital-target');
+  const vitalPill = document.getElementById('vital-counter');
+  
+  if (vitalVal && vitalTarget && state.currentScenario) {
+    const essentialIds = state.currentScenario.essentialItems || [];
+    const count = state.bag.filter(id => essentialIds.includes(id)).length;
+    const target = state.currentScenario.vitalRequired || 4;
+    
+    vitalVal.textContent = count;
+    vitalTarget.textContent = target;
+    
+    if (count >= target) {
+      vitalPill.classList.add('completed');
+    } else {
+      vitalPill.classList.remove('completed');
+    }
+  }
+
   // Timer
   const timerVal = document.getElementById('time-val');
   if (timerVal) {
@@ -204,15 +224,6 @@ export function renderTray(items) {
     el.role = 'button';
     el.ariaLabel = `Añadir ${item.name} a la mochila`;
     
-    // Ghost effect if in bag
-    if (state.bag.includes(item.id)) {
-      el.style.opacity = '0.4';
-      el.style.filter = 'grayscale(1)';
-      el.style.pointerEvents = 'none';
-      el.tabIndex = -1;
-      el.ariaDisabled = 'true';
-    }
-
     el.innerHTML = `
       <img src="${item.icon}" alt="" class="item-icon" aria-hidden="true" loading="lazy">
       <div class="item-name">${item.name}</div>

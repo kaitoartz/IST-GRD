@@ -22,16 +22,24 @@ export function setupClickHandlers() {
       const item = state.items.find(i => i.id === itemId);
       const itemCategory = getItemCategory(itemId, state.currentScenario);
       
-      // Primero actualizamos el tray para mostrar el estado "ghost"
-      UI.renderTray(state.roundItems || state.items);
+      // Eliminar del tray para efecto reflow
+      const itemIndex = state.roundItems.findIndex(i => i.id === itemId);
+      if (itemIndex !== -1) {
+        state.roundItems.splice(itemIndex, 1);
+      }
       
-      // Lanzamos la animación de vuelo
+      // Lanzamos la animación de vuelo ANTES de re-renderizar el tray
+      // para que el elemento original siga ahí para el clon
       await bagAnimator.animateClickToBag(card, {
         id: item.id,
         name: item.name,
         icon: item.icon,
         category: itemCategory
       });
+
+      // Ahora re-renderizamos el tray sin el item
+      UI.renderTray(state.roundItems);
+      UI.updateHUD(); // Actualizar contador de vitales
 
       UI.playSound('pop');
       
@@ -70,9 +78,17 @@ export function setupClickHandlers() {
     
     UI.playSound('pop');
     removeFromBag(itemId);
+    
+    // Devolver al tray
+    const item = state.items.find(i => i.id === itemId);
+    if (item && !state.roundItems.find(i => i.id === itemId)) {
+      state.roundItems.push(item);
+    }
+    
     bagAnimator.removeItemFromBag(itemId);
     UI.showFeedback('Removido', 'Espacio liberado.', 'info');
-    UI.renderTray(state.roundItems || state.items);
+    UI.renderTray(state.roundItems);
+    UI.updateHUD(); // Actualizar contador de vitales
   };
 
   // Tray Events

@@ -439,6 +439,20 @@ body.sc-apagon .background-pattern { background-image: radial-gradient(at 50% 0%
   text-transform: uppercase;
   letter-spacing: 0.05em;
   box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vital-pill {
+  background: white;
+  border-left: 4px solid var(--primary);
+}
+
+.vital-pill.completed {
+  background: var(--essential);
+  color: white;
+  border-left-color: white;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 218, 44, 0.4);
 }
 
 #scenario-pill {

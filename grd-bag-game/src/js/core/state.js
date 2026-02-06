@@ -27,9 +27,9 @@ export const CONFIG = {
   },
 
   POINTS: {
-    E: 10,
+    E: 15,
     R: 5,
-    N: -5,
+    N: -10,
     ROUND_PASS: 100,
     ROUND_PERFECT: 200
   }
@@ -158,9 +158,8 @@ export function calculateRoundScore() {
     }
   });
 
-  // WarioWare style: High requirement
-  // Require at least 4 essentials for the current scenario to survive
-  const minToPass = 4;
+  // Use vitalRequired from scenario if available, fallback to 4
+  const minToPass = scenario.vitalRequired || 4;
 
   const passed = essentialsCount >= minToPass;
 
