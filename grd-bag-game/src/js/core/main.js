@@ -16,20 +16,24 @@ import { bagAnimator } from '../ui/bagAnimation.js';
 
 let ALL_ITEMS = [];
 let ALL_SCENARIOS = [];
+let ALL_PROFILES = [];
 let gameLoopInterval = null;
 
 // --- Initialization ---
 
 async function loadData() {
   try {
-    const [itemsRes, scenariosRes] = await Promise.all([
+    const [itemsRes, scenariosRes, profilesRes] = await Promise.all([
       fetch('grd-bag-game/src/data/items.json'),
-      fetch('grd-bag-game/src/data/scenarios.json')
+      fetch('grd-bag-game/src/data/scenarios.json'),
+      fetch('grd-bag-game/src/data/profiles.json')
     ]);
     ALL_ITEMS = await itemsRes.json();
     ALL_SCENARIOS = await scenariosRes.json();
+    ALL_PROFILES = await profilesRes.json();
     console.log('Items loaded:', ALL_ITEMS.length);
     console.log('Scenarios loaded:', ALL_SCENARIOS.length);
+    console.log('Profiles loaded:', ALL_PROFILES.length);
   } catch (e) {
     console.error('Error loading data:', e);
     // Fallback UI error?
@@ -62,7 +66,11 @@ function proceedToGame() {
     tutorial.classList.add('hidden');
   }
   
-  initGame('challenge', ALL_ITEMS, ALL_SCENARIOS);
+  // Get selected mode from UI (default to challenge)
+  const modeSelect = document.querySelector('input[name="game-mode"]:checked');
+  const selectedMode = modeSelect ? modeSelect.value : 'challenge';
+  
+  initGame(selectedMode, ALL_ITEMS, ALL_SCENARIOS, ALL_PROFILES);
   runPhase('briefing');
 }
 
@@ -90,7 +98,10 @@ function runPhase(phaseName) {
 function gameTick() {
   if (state.isPaused) return;
 
-  state.timeLeft--;
+  // Learning mode doesn't have a countdown
+  if (state.mode !== 'learning') {
+    state.timeLeft--;
+  }
 
   if (state.phase === 'briefing') {
     UI.updateBriefing("¡EMPACA LO VITAL!", state.timeLeft);
@@ -100,13 +111,16 @@ function gameTick() {
   } else if (state.phase === 'action') {
     UI.updateHUD();
 
-    // Audiovisual feedback: Tick sound on last 5 seconds
-    if (state.timeLeft <= 5 && state.timeLeft > 0) {
-      UI.playSound('tick');
-    }
+    // Only handle timer countdown in non-learning mode
+    if (state.mode !== 'learning') {
+      // Audiovisual feedback: Tick sound on last 5 seconds
+      if (state.timeLeft <= 5 && state.timeLeft > 0) {
+        UI.playSound('tick');
+      }
 
-    if (state.timeLeft <= 0) {
-      finishRound(true); // Time Up
+      if (state.timeLeft <= 0) {
+        finishRound(true); // Time Up
+      }
     }
   } else if (state.phase === 'debrief') {
     // Debrief is just a delay to show result
