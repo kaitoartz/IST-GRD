@@ -190,5 +190,17 @@
       "inundacion": "N",
       "apagon": "N"
     }
+  },
+  {
+    "id": "time_extra",
+    "name": "Bonus Tiempo",
+    "icon": "grd-bag-game/public/assets/icons/radio.webp",
+    "feedback": "¡Tiempo extra! Úsalo con sabiduría.",
+    "scenarios": {
+      "terremoto": "N",
+      "incendio": "N",
+      "inundacion": "N",
+      "apagon": "N"
+    }
   }
 ]
