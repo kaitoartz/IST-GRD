@@ -27,9 +27,9 @@ export const CONFIG = {
   },
 
   POINTS: {
-    E: 15,
+    E: 10,
     R: 5,
-    N: -10,
+    N: -5,
     ROUND_PASS: 100,
     ROUND_PERFECT: 200
   }
@@ -61,8 +61,7 @@ export const state = {
   lastRoundResult: {
     passed: false,
     score: 0,
-    message: '',
-    itemBreakdown: []
+    message: ''
   }
 };
 
@@ -108,7 +107,7 @@ export function initGame(mode, allItems, scenarios) {
 
 export function startRound() {
   state.bag = []; 
-  state.lastRoundResult = { passed: false, score: 0, message: '', itemBreakdown: [] };
+  state.lastRoundResult = { passed: false, score: 0, message: '' };
   
   // Choose random scenario different from previous if possible
   if (state.scenarios.length > 0) {
@@ -138,7 +137,6 @@ export function removeFromBag(itemId) {
 export function calculateRoundScore() {
   let score = 0;
   let essentialsCount = 0;
-  const itemBreakdown = [];
   
   if (!state.currentScenario) return state.lastRoundResult;
 
@@ -147,49 +145,24 @@ export function calculateRoundScore() {
   const recommendedIds = scenario.recommendedItems || [];
   const forbiddenIds = scenario.forbiddenItems || [];
 
-  const categoryMeta = {
-    E: { icon: '✅', label: 'Vital' },
-    R: { icon: '⚠️', label: 'Extra' },
-    N: { icon: '❌', label: 'Lujo' }
-  };
-
   state.bag.forEach(id => {
     const item = state.items.find(i => i.id === id);
     if (!item) return;
 
-    let category = 'N';
     // Classify item based on scenario lists
     if (essentialIds.includes(id)) {
-      category = 'E';
       score += CONFIG.POINTS.E;
       essentialsCount++;
     } else if (recommendedIds.includes(id)) {
-      category = 'R';
       score += CONFIG.POINTS.R;
     } else if (forbiddenIds.includes(id)) {
-      category = 'N';
       score += CONFIG.POINTS.N;
     }
-
-    const meta = categoryMeta[category] || categoryMeta.N;
-    const fallback = category === 'E'
-      ? 'Vital para este escenario.'
-      : category === 'R'
-        ? 'Útil, pero no esencial aquí.'
-        : 'No aporta en este escenario y ocupa espacio.';
-
-    itemBreakdown.push({
-      id,
-      name: item.name,
-      category,
-      statusIcon: meta.icon,
-      statusLabel: meta.label,
-      justification: item.feedback || fallback
-    });
   });
 
-  // Use vitalRequired from scenario if available, fallback to 4
-  const minToPass = scenario.vitalRequired || 4;
+  // WarioWare style: High requirement
+  // Require at least 4 essentials for the current scenario to survive
+  const minToPass = 4;
 
   const passed = essentialsCount >= minToPass;
 
@@ -202,8 +175,7 @@ export function calculateRoundScore() {
     scoreAdded: score,
     essentialsCount,
     minToPass,
-    message: passed ? '¡SOBREVIVISTE!' : 'NO ESTABAS PREPARADO',
-    itemBreakdown
+    message: passed ? '¡SOBREVIVISTE!' : 'NO ESTABAS PREPARADO'
   };
 
   return state.lastRoundResult;
@@ -212,8 +184,12 @@ export function calculateRoundScore() {
 export function getRoundTime() {
   const { level } = state;
   // WarioWare style speed ramp
-  // Start at 12s and reduce by 0.5s per level down to 5s
-  let time = 12 - ((level - 1) * 0.5);
+  // Start at timeMax (15s) and reduce by rampStep (0.5s) per level
+  const challenge = CONFIG.MODES.challenge;
+  const start = challenge.timeMax || 15;
+  const step = challenge.rampStep || 0.5;
+
+  let time = start - ((level - 1) * step);
 
   // Add carried over time from previous round
   if (state.carriedOverTime > 0) {
@@ -221,6 +197,7 @@ export function getRoundTime() {
     state.carriedOverTime = 0; // Consume it
   }
 
+  // Ensure we don't go below 5s
   return Math.max(time, 5); 
 }
 
