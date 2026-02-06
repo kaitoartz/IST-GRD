@@ -28,6 +28,8 @@ export function setupClickHandlers() {
 
       // Also remove from state.roundItems so it doesn't reappear on re-render
       state.roundItems = state.roundItems.filter(i => i.id !== 'time_extra');
+      return; // Early return for time_extra items
+    }
 
       return;
     }

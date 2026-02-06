@@ -82,10 +82,23 @@ export function updateBriefing(taskText, timeLeft) {
   const taskEl = document.getElementById('briefing-task');
   const timerEl = document.getElementById('briefing-timer');
   const scenario = state.currentScenario;
+  const profile = state.currentProfile;
   
   if(taskEl) {
     if (scenario) {
-      taskEl.innerHTML = `${scenario.icon} PREPÁRATE PARA:<br><span style="color:var(--primary); font-size: 2.5rem;">${scenario.name.toUpperCase()}</span>`;
+      let briefingHTML = `${scenario.icon} PREPÁRATE PARA:<br><span style="color:var(--primary); font-size: 2.5rem;">${scenario.name.toUpperCase()}</span>`;
+      
+      // Add context narrative
+      if (scenario.contextNarrative) {
+        briefingHTML += `<br><div style="font-size: 1rem; margin-top: 1rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">${scenario.contextNarrative}</div>`;
+      }
+      
+      // Add profile info if not general
+      if (profile && profile.id !== 'general') {
+        briefingHTML += `<br><div style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--accent-light);">${profile.icon} ${profile.description}</div>`;
+      }
+      
+      taskEl.innerHTML = briefingHTML;
     } else {
       taskEl.textContent = taskText || '¡PREPÁRATE!';
     }
@@ -102,7 +115,20 @@ export function updateDebrief(result) {
     textEl.textContent = result.message || "¡MUY BIEN!";
     textEl.style.color = "var(--success)";
     iconEl.textContent = result.essentialsCount === 8 ? "🏆" : "✅";
-    infoEl.textContent = `+${result.scoreAdded} Puntos`;
+    
+    let infoHTML = `+${result.scoreAdded} Puntos`;
+    
+    // Add balanced bag bonus message
+    if (result.balancedBonus) {
+      infoHTML += `<br><span style="color: var(--accent-light); font-size: 0.9rem;">🎯 ¡Bolso Equilibrado! +${CONFIG.POINTS.BALANCED_BAG_BONUS} pts</span>`;
+    }
+    
+    // Add profile bonus message
+    if (result.profileBonus && state.currentProfile && state.currentProfile.bonusMessage) {
+      infoHTML += `<br><span style="color: var(--accent-light); font-size: 0.9rem;">${state.currentProfile.icon} ${state.currentProfile.bonusMessage}</span>`;
+    }
+    
+    infoEl.innerHTML = infoHTML;
     playSound('success');
   } else {
     textEl.textContent = "¡CUIDADO!";
@@ -135,6 +161,24 @@ export function updateHUD() {
   if (scenarioPill && state.currentScenario) {
     scenarioPill.textContent = state.currentScenario.name.toUpperCase();
   }
+  
+  // Context Narrative
+  const contextNarrative = document.getElementById('context-narrative');
+  if (contextNarrative && state.currentScenario && state.currentScenario.contextNarrative) {
+    contextNarrative.textContent = state.currentScenario.contextNarrative;
+    contextNarrative.style.display = 'block';
+  } else if (contextNarrative) {
+    contextNarrative.style.display = 'none';
+  }
+  
+  // Profile Display
+  const profileDisplay = document.getElementById('profile-display');
+  if (profileDisplay && state.currentProfile && state.currentProfile.id !== 'general') {
+    profileDisplay.textContent = `${state.currentProfile.icon} ${state.currentProfile.description}`;
+    profileDisplay.style.display = 'block';
+  } else if (profileDisplay) {
+    profileDisplay.style.display = 'none';
+  }
 
   // Level
   const levelVal = document.getElementById('level-val');
@@ -142,20 +186,31 @@ export function updateHUD() {
 
   // Timer
   const timerVal = document.getElementById('time-val');
-  if (timerVal) {
-    timerVal.textContent = state.timeLeft;
-    const timerBox = document.getElementById('timer-display');
-    if (state.timeLeft <= 5) {
-      timerBox.classList.add('urgent');
-      // Efecto de vibración si es muy poco tiempo
-      if (state.timeLeft <= 3) {
-        timerBox.style.transform = `translate(${(Math.random()-0.5)*5}px, ${(Math.random()-0.5)*5}px)`;
+  const timerBox = document.getElementById('timer-display');
+  
+  // Hide timer in learning mode
+  if (state.mode === 'learning') {
+    if (timerBox) {
+      timerBox.style.display = 'none';
+    }
+  } else {
+    if (timerBox) {
+      timerBox.style.display = 'flex';
+    }
+    if (timerVal) {
+      timerVal.textContent = state.timeLeft;
+      if (state.timeLeft <= 5) {
+        timerBox.classList.add('urgent');
+        // Efecto de vibración si es muy poco tiempo
+        if (state.timeLeft <= 3) {
+          timerBox.style.transform = `translate(${(Math.random()-0.5)*5}px, ${(Math.random()-0.5)*5}px)`;
+        } else {
+          timerBox.style.transform = 'none';
+        }
       } else {
+        timerBox.classList.remove('urgent');
         timerBox.style.transform = 'none';
       }
-    } else {
-      timerBox.classList.remove('urgent');
-      timerBox.style.transform = 'none';
     }
   }
 
@@ -170,6 +225,14 @@ export function updateHUD() {
     });
   } else {
     livesContainer.classList.add('hidden');
+  }
+  
+  // Show learning mode indicator
+  const levelPill = document.getElementById('level-pill');
+  if (levelPill && state.mode === 'learning') {
+    levelPill.innerHTML = `<span style="color: var(--accent-light);">📚 APRENDIZAJE</span> NIVEL <span id="level-val">${state.level}</span>`;
+  } else if (levelPill) {
+    levelPill.innerHTML = `NIVEL <span id="level-val">${state.level}</span>`;
   }
 }
 

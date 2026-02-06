@@ -118,12 +118,14 @@ export class BagAnimator {
     if (!this.bagCounter) return;
     
     const count = this.itemsInBag.length;
-    anime({
-      targets: this.bagCounter,
-      scale: [1, 1.3, 1],
-      duration: 300,
-      easing: 'easeOutElastic(1, 0.5)'
-    });
+    if (typeof anime !== 'undefined') {
+      anime({
+        targets: this.bagCounter,
+        scale: [1, 1.3, 1],
+        duration: 300,
+        easing: 'easeOutElastic(1, 0.5)'
+      });
+    }
 
     this.bagCounter.textContent = count;
 
@@ -163,14 +165,20 @@ export class BagAnimator {
       this.itemsPreview.appendChild(thumbnail);
 
       // Animar entrada
-      anime({
-        targets: thumbnail,
-        opacity: 1,
-        scale: 1,
-        delay: index * 50,
-        duration: 300,
-        easing: 'easeOutBack'
-      });
+      if (typeof anime !== 'undefined') {
+        anime({
+          targets: thumbnail,
+          opacity: 1,
+          scale: 1,
+          delay: index * 50,
+          duration: 300,
+          easing: 'easeOutBack'
+        });
+      } else {
+        // Fallback without animation
+        thumbnail.style.opacity = '1';
+        thumbnail.style.transform = 'scale(1)';
+      }
     });
   }
 
@@ -185,12 +193,14 @@ export class BagAnimator {
       this.backpackImg.classList.add('glow');
       setTimeout(() => this.backpackImg.classList.remove('glow'), 500);
 
-      anime({
-        targets: this.backpackImg,
-        scale: [1, 1.05, 1],
-        duration: 400,
-        easing: 'easeOutElastic(1, 0.5)'
-      });
+      if (typeof anime !== 'undefined') {
+        anime({
+          targets: this.backpackImg,
+          scale: [1, 1.05, 1],
+          duration: 400,
+          easing: 'easeOutElastic(1, 0.5)'
+        });
+      }
     } else if (type === 'shake') {
       this.backpackImg.classList.add('shake');
       setTimeout(() => this.backpackImg.classList.remove('shake'), 500);
@@ -205,7 +215,7 @@ export class BagAnimator {
     if (!this.backpackImg) return;
     
     // Usar canvas-confetti
-    if (window.confetti) {
+    if (typeof confetti !== 'undefined') {
       const backpackRect = this.backpackImg.getBoundingClientRect();
       const x = (backpackRect.left + backpackRect.width / 2) / window.innerWidth;
       const y = (backpackRect.top + backpackRect.height / 2) / window.innerHeight;
@@ -219,13 +229,15 @@ export class BagAnimator {
     }
 
     // Animar mochila
-    anime({
-      targets: this.backpackImg,
-      rotate: [0, -10, 10, -10, 10, 0],
-      scale: [1, 1.1, 1],
-      duration: 800,
-      easing: 'easeInOutQuad'
-    });
+    if (typeof anime !== 'undefined') {
+      anime({
+        targets: this.backpackImg,
+        rotate: [0, -10, 10, -10, 10, 0],
+        scale: [1, 1.1, 1],
+        duration: 800,
+        easing: 'easeInOutQuad'
+      });
+    }
   }
 
   /**
@@ -234,18 +246,26 @@ export class BagAnimator {
   clearBag() {
     if (!this.initialized) this.init();
     
-    anime({
-      targets: '.item-thumbnail',
-      opacity: 0,
-      scale: 0,
-      duration: 300,
-      delay: anime.stagger(50),
-      complete: () => {
-        this.itemsInBag = [];
-        this.updateCounter();
-        this.itemsPreview.innerHTML = '';
-      }
-    });
+    // Check if anime.js is available
+    if (typeof anime !== 'undefined') {
+      anime({
+        targets: '.item-thumbnail',
+        opacity: 0,
+        scale: 0,
+        duration: 300,
+        delay: anime.stagger(50),
+        complete: () => {
+          this.itemsInBag = [];
+          this.updateCounter();
+          this.itemsPreview.innerHTML = '';
+        }
+      });
+    } else {
+      // Fallback without anime.js
+      this.itemsInBag = [];
+      this.updateCounter();
+      this.itemsPreview.innerHTML = '';
+    }
   }
 
   /**
