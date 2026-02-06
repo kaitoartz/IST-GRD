@@ -27,9 +27,9 @@ export const CONFIG = {
   },
 
   POINTS: {
-    E: 10,
+    E: 15,
     R: 5,
-    N: -5,
+    N: -10,
     ROUND_PASS: 100,
     ROUND_PERFECT: 200
   }
@@ -60,7 +60,8 @@ export const state = {
   lastRoundResult: {
     passed: false,
     score: 0,
-    message: ''
+    message: '',
+    itemBreakdown: []
   }
 };
 
@@ -105,7 +106,7 @@ export function initGame(mode, allItems, scenarios) {
 
 export function startRound() {
   state.bag = []; 
-  state.lastRoundResult = { passed: false, score: 0, message: '' };
+  state.lastRoundResult = { passed: false, score: 0, message: '', itemBreakdown: [] };
   
   // Choose random scenario different from previous if possible
   if (state.scenarios.length > 0) {
@@ -135,6 +136,7 @@ export function removeFromBag(itemId) {
 export function calculateRoundScore() {
   let score = 0;
   let essentialsCount = 0;
+  const itemBreakdown = [];
   
   if (!state.currentScenario) return state.lastRoundResult;
 
@@ -143,19 +145,45 @@ export function calculateRoundScore() {
   const recommendedIds = scenario.recommendedItems || [];
   const forbiddenIds = scenario.forbiddenItems || [];
 
+  const categoryMeta = {
+    E: { icon: '✅', label: 'Vital' },
+    R: { icon: '⚠️', label: 'Extra' },
+    N: { icon: '❌', label: 'Lujo' }
+  };
+
   state.bag.forEach(id => {
     const item = state.items.find(i => i.id === id);
     if (!item) return;
 
+    let category = 'N';
     // Classify item based on scenario lists
     if (essentialIds.includes(id)) {
+      category = 'E';
       score += CONFIG.POINTS.E;
       essentialsCount++;
     } else if (recommendedIds.includes(id)) {
+      category = 'R';
       score += CONFIG.POINTS.R;
     } else if (forbiddenIds.includes(id)) {
+      category = 'N';
       score += CONFIG.POINTS.N;
     }
+
+    const meta = categoryMeta[category] || categoryMeta.N;
+    const fallback = category === 'E'
+      ? 'Vital para este escenario.'
+      : category === 'R'
+        ? 'Útil, pero no esencial aquí.'
+        : 'No aporta en este escenario y ocupa espacio.';
+
+    itemBreakdown.push({
+      id,
+      name: item.name,
+      category,
+      statusIcon: meta.icon,
+      statusLabel: meta.label,
+      justification: item.feedback || fallback
+    });
   });
 
   // WarioWare style: High requirement
@@ -173,7 +201,8 @@ export function calculateRoundScore() {
     scoreAdded: score,
     essentialsCount,
     minToPass,
-    message: passed ? '¡SOBREVIVISTE!' : 'NO ESTABAS PREPARADO'
+    message: passed ? '¡SOBREVIVISTE!' : 'NO ESTABAS PREPARADO',
+    itemBreakdown
   };
 
   return state.lastRoundResult;
