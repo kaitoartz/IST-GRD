@@ -7,7 +7,8 @@
     "briefingText": "¡TERREMOTO! Empaca lo esencial",
     "essentialItems": ["water", "food", "flashlight", "batteries", "medkit", "whistle", "radio", "documents"],
     "recommendedItems": ["mask", "blanket", "money", "keys"],
-    "forbiddenItems": ["laptop", "hairdryer", "novel", "plushie"]
+    "forbiddenItems": ["laptop", "hairdryer", "novel", "plushie"],
+    "vitalRequired": 5
   },
   {
     "id": "incendio",
@@ -17,7 +18,8 @@
     "briefingText": "¡INCENDIO! Sal rápido y seguro",
     "essentialItems": ["water", "food", "medkit", "documents", "mask"],
     "recommendedItems": ["flashlight", "batteries", "whistle", "radio", "keys"],
-    "forbiddenItems": ["blanket", "money", "laptop", "hairdryer", "novel", "plushie"]
+    "forbiddenItems": ["blanket", "money", "laptop", "hairdryer", "novel", "plushie"],
+    "vitalRequired": 4
   },
   {
     "id": "inundacion",
@@ -27,7 +29,8 @@
     "briefingText": "¡INUNDACIÓN! Protege documentos",
     "essentialItems": ["water", "food", "flashlight", "batteries", "medkit", "radio", "documents"],
     "recommendedItems": ["whistle", "blanket", "keys"],
-    "forbiddenItems": ["mask", "money", "laptop", "hairdryer", "novel", "plushie"]
+    "forbiddenItems": ["mask", "money", "laptop", "hairdryer", "novel", "plushie"],
+    "vitalRequired": 5
   },
   {
     "id": "apagon",
@@ -37,6 +40,7 @@
     "briefingText": "¡APAGÓN! Luz y contacto vital",
     "essentialItems": ["water", "food", "flashlight", "batteries", "radio", "money"],
     "recommendedItems": ["medkit", "blanket", "novel"],
-    "forbiddenItems": ["whistle", "documents", "mask", "keys", "laptop", "hairdryer", "plushie"]
+    "forbiddenItems": ["whistle", "documents", "mask", "keys", "laptop", "hairdryer", "plushie"],
+    "vitalRequired": 4
   }
 ]
