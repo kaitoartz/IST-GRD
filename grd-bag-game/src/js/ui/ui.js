@@ -97,6 +97,7 @@ export function updateDebrief(result) {
   const textEl = document.getElementById('debrief-text');
   const iconEl = document.getElementById('debrief-icon');
   const infoEl = document.getElementById('debrief-info');
+  const listEl = document.getElementById('debrief-items');
 
   if(result.passed) {
     textEl.textContent = result.message || "¡MUY BIEN!";
@@ -110,6 +111,25 @@ export function updateDebrief(result) {
     iconEl.textContent = "⚠️";
     infoEl.textContent = `Necesitabas ${result.minToPass} vitales (tuviste ${result.essentialsCount})`;
     playSound('error');
+    triggerScreenShake();
+  }
+
+  if (listEl) {
+    const items = result.itemBreakdown || [];
+    if (!items.length) {
+      listEl.innerHTML = '<li class="debrief-empty">No seleccionaste ítems.</li>';
+    } else {
+      listEl.innerHTML = items.map(item => `
+        <li class="debrief-item" data-category="${item.category}">
+          <div class="debrief-item-header">
+            <span class="debrief-status" aria-hidden="true">${item.statusIcon}</span>
+            <span class="debrief-label">${item.statusLabel}</span>
+            <span class="debrief-item-name">${item.name}</span>
+          </div>
+          <div class="debrief-justification">${item.justification}</div>
+        </li>
+      `).join('');
+    }
   }
 }
 
@@ -127,6 +147,11 @@ export function showFeedback(title, message, type = 'info') {
       toast.el.classList.add('hidden');
     }, 4000); // 4s to read feedback
   }
+}
+
+export function triggerScreenShake() {
+  document.body.classList.add('screen-shake');
+  setTimeout(() => document.body.classList.remove('screen-shake'), 450);
 }
 
 export function updateHUD() {
@@ -219,10 +244,11 @@ export function renderTray(items) {
     }
     
     el.dataset.category = category; 
+    const categoryLabel = category === 'E' ? 'Vital' : category === 'R' ? 'Extra' : 'Lujo';
 
     el.tabIndex = 0;
     el.role = 'button';
-    el.ariaLabel = `Añadir ${item.name} a la mochila`;
+    el.ariaLabel = `Añadir ${item.name} (${categoryLabel}) a la mochila`;
     
     el.innerHTML = `
       <img src="${item.icon}" alt="" class="item-icon" aria-hidden="true" loading="lazy">
@@ -285,4 +311,3 @@ export function renderFinalResults() {
 
   renderLeaderboard();
 }
-
