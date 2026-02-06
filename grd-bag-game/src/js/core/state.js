@@ -292,9 +292,10 @@ export function calculateRoundScore() {
 }
 
 export function getRoundTime() {
-  // Learning mode has no timer
+  // Learning mode has no timer - return a very large number instead of Infinity
+  // to avoid potential arithmetic edge cases
   if (state.mode === 'learning') {
-    return Infinity;
+    return 999999;
   }
   
   const { level } = state;

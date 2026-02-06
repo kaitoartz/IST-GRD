@@ -17,7 +17,7 @@
     "name": "Comida",
     "icon": "grd-bag-game/public/assets/icons/food.webp",
     "feedback": "Alimentos no perecibles son básicos para resistir.",
-    "category": "water",
+    "category": "energy",
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
