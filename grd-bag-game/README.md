@@ -179,9 +179,9 @@ Editar variables CSS en `public/css/styles.css`:
 
 ## 📈 Puntuación
 
-- **Item Esencial (E)**: +15 pts
+- **Item Esencial (E)**: +10 pts
 - **Item Recomendado (R)**: +5 pts
-- **Item Prohibido (N)**: -10 pts
+- **Item Prohibido (N)**: -5 pts
 - **Ronda Pasada**: +100 pts
 - **Ronda Perfecta (8/8 vitales)**: +200 pts bonus
 

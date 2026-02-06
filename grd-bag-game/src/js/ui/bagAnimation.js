@@ -151,14 +151,13 @@ export class BagAnimator {
 
     this.itemsInBag.forEach((item, index) => {
       const thumbnail = document.createElement('div');
-      const categoryLabel = item.category === 'E' ? 'Vital' : item.category === 'R' ? 'Extra' : 'Lujo';
       thumbnail.className = 'item-thumbnail';
       thumbnail.dataset.id = item.id; // Store item ID for removal
       thumbnail.dataset.category = item.category; // NEW: Store category for color coding
-      thumbnail.title = `${item.name} (${categoryLabel})`; // Tooltip
+      thumbnail.title = item.name; // Tooltip
       thumbnail.tabIndex = 0;
       thumbnail.role = 'button';
-      thumbnail.ariaLabel = `Quitar ${item.name} (${categoryLabel}) de la mochila`;
+      thumbnail.ariaLabel = `Quitar ${item.name} de la mochila`;
       thumbnail.innerHTML = `<img src="${item.icon}" alt="" aria-hidden="true" loading="lazy">`;
       thumbnail.style.opacity = '0';
       thumbnail.style.transform = 'scale(0)';
@@ -237,28 +236,6 @@ export class BagAnimator {
         scale: [1, 1.1, 1],
         duration: 800,
         easing: 'easeInOutQuad'
-      });
-    }
-  }
-
-  /**
-   * Partículas pequeñas para aciertos críticos (ítems vitales)
-   */
-  emitCriticalSuccess() {
-    if (!this.initialized) this.init();
-    if (!this.backpackImg) return;
-
-    if (window.confetti) {
-      const backpackRect = this.backpackImg.getBoundingClientRect();
-      const x = (backpackRect.left + backpackRect.width / 2) / window.innerWidth;
-      const y = (backpackRect.top + backpackRect.height / 2) / window.innerHeight;
-
-      confetti({
-        particleCount: 30,
-        spread: 50,
-        scalar: 0.8,
-        origin: { x, y },
-        colors: ['#16A34A', '#FBBF24', '#3B82F6']
       });
     }
   }
