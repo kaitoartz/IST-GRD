@@ -15,24 +15,20 @@ import { bagAnimator } from '../ui/bagAnimation.js';
 
 let ALL_ITEMS = [];
 let ALL_SCENARIOS = [];
-let ALL_PROFILES = [];
 let gameLoopInterval = null;
 
 // --- Initialization ---
 
 async function loadData() {
   try {
-    const [itemsRes, scenariosRes, profilesRes] = await Promise.all([
+    const [itemsRes, scenariosRes] = await Promise.all([
       fetch('grd-bag-game/src/data/items.json'),
-      fetch('grd-bag-game/src/data/scenarios.json'),
-      fetch('grd-bag-game/src/data/profiles.json')
+      fetch('grd-bag-game/src/data/scenarios.json')
     ]);
     ALL_ITEMS = await itemsRes.json();
     ALL_SCENARIOS = await scenariosRes.json();
-    ALL_PROFILES = await profilesRes.json();
     console.log('Items loaded:', ALL_ITEMS.length);
     console.log('Scenarios loaded:', ALL_SCENARIOS.length);
-    console.log('Profiles loaded:', ALL_PROFILES.length);
   } catch (e) {
     console.error('Error loading data:', e);
     // Fallback UI error?
@@ -68,7 +64,7 @@ function proceedToGame() {
   // Default to challenge mode
   const selectedMode = 'challenge';
   
-  initGame(selectedMode, ALL_ITEMS, ALL_SCENARIOS, ALL_PROFILES);
+  initGame(selectedMode, ALL_ITEMS, ALL_SCENARIOS);
   runPhase('briefing');
 }
 

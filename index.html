@@ -117,33 +117,22 @@
           <img src="grd-bag-game/public/assets/images/Logo_IST_Educa.png" alt="IST Educa" class="logo-img" width="140" height="48" loading="lazy">
         </div>
 
-        <div id="scenario-pill" class="level-pill centered">
-          ESCENARIO
-        </div>
-        
-        <!-- Context Narrative Display -->
-        <div id="context-narrative" class="context-narrative" style="text-align: center; font-size: 0.85rem; padding: 0.5rem 1rem; max-width: 600px; margin: 0 auto; color: var(--text-light); display: none;">
-        </div>
-        
-        <div class="hud-stats">
+        <div class="header-center-group">
+          <div id="scenario-pill" class="level-pill centered">
+            ESCENARIO
+          </div>
+          
+          <!-- Context Narrative Display -->
+          <div id="context-narrative" class="context-narrative" style="text-align: center; font-size: 0.85rem; padding: 0.5rem 1rem; max-width: 600px; margin: 0 auto; color: var(--text-light); display: none;">
+          </div>
+        </div><div class="hud-stats">
           <div id="level-pill" class="level-pill">
             NIVEL <span id="level-val">1</span>
           </div>
 
-          <!-- Solo visible en desafío -->
-          <div id="lives-container" class="lives-display hidden">
-            <span class="life-heart">💜</span>
-            <span class="life-heart">💜</span>
-            <span class="life-heart">💜</span>
-          </div>
+
           
-          <div class="timer-pill" id="timer-display">
-            <span id="time-val">15</span>
-          </div>
-          
-          <div id="time-bonus-btn" class="time-bonus-bubble inactive" title="Bono de Tiempo">
-            ⏰
-          </div>
+
         </div>
       </header>
 
@@ -151,7 +140,21 @@
         <!-- Columna Izquierda: Suministros -->
         <div class="game-col col-tray">
           <div class="tray-header">
-            <h3>Disponibles</h3>
+            <div class="tray-hud">
+              <div id="lives-container" class="lives-display hidden">
+                <span class="life-heart">💜</span>
+                <span class="life-heart">💜</span>
+                <span class="life-heart">💜</span>
+              </div>
+              
+              <div class="timer-pill" id="timer-display">
+                <span id="time-val">15</span>
+              </div>
+              
+              <div id="time-bonus-btn" class="time-bonus-bubble inactive" title="Bono de Tiempo">
+                ⏰
+              </div>
+            </div>
           </div>
           <div id="tray-list" class="items-grid custom-scroll">
             <!-- Items injectados -->
@@ -177,14 +180,6 @@
               </button>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Feedback Toast (Opcional, si se usa durante el juego) -->
-      <div id="feedback-toast" class="toast hidden">
-        <div class="toast-content">
-          <strong class="toast-title">Info</strong>
-          <span class="toast-msg">Mensaje</span>
         </div>
       </div>
     </section>

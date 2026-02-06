@@ -86,8 +86,6 @@ export function updateBriefing(taskText, timeLeft) {
   const taskEl = document.getElementById("briefing-task");
   const timerEl = document.getElementById("briefing-timer");
   const scenario = state.currentScenario;
-  const profile = state.currentProfile;
-
   if (taskEl) {
     if (scenario) {
       let briefingHTML = `${scenario.icon} PREPÁRATE PARA:<br><span style="color:var(--primary); font-size: 2.5rem;">${scenario.name.toUpperCase()}</span>`;
@@ -95,11 +93,6 @@ export function updateBriefing(taskText, timeLeft) {
       // Add context narrative
       if (scenario.contextNarrative) {
         briefingHTML += `<br><div style="font-size: 1rem; margin-top: 1rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">${scenario.contextNarrative}</div>`;
-      }
-
-      // Add profile info if not general
-      if (profile && profile.id !== "general") {
-        briefingHTML += `<br><div style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--accent-light);">${profile.icon} ${profile.description}</div>`;
       }
 
       taskEl.innerHTML = briefingHTML;
@@ -125,15 +118,6 @@ export function updateDebrief(result) {
     // Add balanced bag bonus message
     if (result.balancedBonus) {
       infoHTML += `<br><span style="color: var(--accent-light); font-size: 0.9rem;">🎯 ¡Bolso Equilibrado! +${CONFIG.POINTS.BALANCED_BAG_BONUS} pts</span>`;
-    }
-
-    // Add profile bonus message
-    if (
-      result.profileBonus &&
-      state.currentProfile &&
-      state.currentProfile.bonusMessage
-    ) {
-      infoHTML += `<br><span style="color: var(--accent-light); font-size: 0.9rem;">${state.currentProfile.icon} ${state.currentProfile.bonusMessage}</span>`;
     }
 
     infoEl.innerHTML = infoHTML;

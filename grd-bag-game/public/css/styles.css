@@ -448,6 +448,26 @@ body.sc-apagon .background-pattern { background-image: radial-gradient(at 50% 0%
   text-align: center;
 }
 
+.header-center-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+  max-width: 600px;
+}
+
+@media (min-width: 1024px) {
+  #scenario-pill {
+    font-size: var(--text-3xl); /* Más grande en PC */
+    padding: var(--space-2) var(--space-8);
+  }
+  
+  .header-center-group {
+    margin-right: var(--space-8); /* Empujarlo un poco a la derecha como pidió el usuario */
+  }
+}
+
 body.sc-terremoto #scenario-pill { border-color: var(--color-terremoto); }
 body.sc-incendio #scenario-pill { border-color: var(--color-incendio); }
 body.sc-inundacion #scenario-pill { border-color: var(--color-inundacion); }
@@ -579,6 +599,13 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
 }
 
 .life-heart.lost {
+  opacity: 0.2;
+  filter: grayscale(1) blur(0.5px);
+  transform: scale(0.85);
+  display: inline-block;
+}
+
+.life-heart.lost {
   opacity: 0.3;
   filter: grayscale(1) scale(0.8);
 }
@@ -625,6 +652,62 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
 .btn-quit {
   color: #DC2626; /* var(--forbidden) */
   border-color: #DC2626;
+}
+
+.tray-header {
+  padding: var(--space-4);
+  background: white;
+  border-bottom: 2px solid var(--gray-100);
+  margin-bottom: var(--space-2);
+}
+
+.tray-hud {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  padding: var(--space-2) var(--space-4);
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  box-shadow: inset var(--shadow-sm);
+}
+
+.tray-hud .lives-display {
+  display: flex;
+  gap: 4px;
+}
+
+.tray-hud .timer-pill {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: var(--space-1) var(--space-4);
+  min-width: unset;
+}
+
+.tray-hud .time-bonus-bubble {
+  width: 44px;
+  height: 44px;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 2px solid var(--gray-200);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tray-hud .time-bonus-bubble:hover:not(.inactive) {
+  transform: scale(1.1) rotate(15deg);
+  background: var(--accent-cyan);
+  border-color: var(--primary);
+}
+
+.tray-hud .time-bonus-bubble.inactive {
+  opacity: 0.3;
+  filter: grayscale(1);
+  cursor: default;
 }
 
 /* --- RESULTS SCREEN --- */

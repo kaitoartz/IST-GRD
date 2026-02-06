@@ -4,8 +4,8 @@ export const CONFIG = {
   MIN_ESSENTIALS_TO_PASS: 6, // Condición de victoria de la ronda
 
   // Tiempos en segundos
-  BRIEFING_TIME: 4,
-  DEBRIEF_TIME: 3,
+  BRIEFING_TIME: 6,
+  DEBRIEF_TIME: 5,
 
   // Dinámicas de tiempo
   TIME: {
@@ -58,7 +58,6 @@ export const state = {
 
   items: [],        // Catálogo completo
   scenarios: [],    // Escenarios disponibles
-  profiles: [],     // Perfiles de persona objetivo
   roundItems: [],   // Items mostrados en la ronda actual
   bag: [],          // Array de IDs en el bolso (ronda actual)
 
@@ -67,7 +66,6 @@ export const state = {
   lives: 3,
   level: 1,         // Número de ronda actual
   currentScenario: null,
-  currentProfile: null, // Perfil activo en la ronda
 
   // Timer
   timeLeft: 0,
@@ -81,8 +79,7 @@ export const state = {
     passed: false,
     score: 0,
     message: '',
-    balancedBonus: false,
-    profileBonus: false
+    balancedBonus: false
   }
 };
 
@@ -115,16 +112,14 @@ export class Leaderboard {
 
 // --- Acciones de Estado ---
 
-export function initGame(mode, allItems, scenarios, profiles = []) {
+export function initGame(mode, allItems, scenarios) {
   state.mode = mode; 
   state.items = allItems;
   state.scenarios = scenarios || [];
-  state.profiles = profiles || [];
   state.score = 0;
   state.level = 1;
   state.lives = mode === 'learning' ? Infinity : CONFIG.MODES[mode]?.lives || CONFIG.MODES.challenge.lives;
   state.isPaused = false;
-  state.currentProfile = null;
   
   // Inicialización de tiempo global persistente
   state.timeLeft = 20; // Empezamos con 20 segundos de base
@@ -132,7 +127,7 @@ export function initGame(mode, allItems, scenarios, profiles = []) {
 
 export function startRound() {
   state.bag = []; 
-  state.lastRoundResult = { passed: false, score: 0, message: '', balancedBonus: false, profileBonus: false };
+  state.lastRoundResult = { passed: false, score: 0, message: '', balancedBonus: false };
   state.timeBonusCollected = false;
   
   // Choose random scenario different from previous if possible
@@ -141,19 +136,6 @@ export function startRound() {
     state.currentScenario = otherScenarios.length > 0 
       ? otherScenarios[Math.floor(Math.random() * otherScenarios.length)]
       : state.scenarios[0];
-  }
-  
-  // Choose random profile (25% chance for special profile, 75% general)
-  if (state.profiles.length > 0) {
-    const generalProfile = state.profiles.find(p => p.id === 'general');
-    if (Math.random() < 0.25) {
-      const specialProfiles = state.profiles.filter(p => p.id !== 'general');
-      state.currentProfile = specialProfiles.length > 0
-        ? specialProfiles[Math.floor(Math.random() * specialProfiles.length)]
-        : generalProfile;
-    } else {
-      state.currentProfile = generalProfile;
-    }
   }
 }
 
@@ -180,7 +162,6 @@ export function calculateRoundScore() {
   if (!state.currentScenario) return state.lastRoundResult;
 
   const scenario = state.currentScenario;
-  const profile = state.currentProfile;
   
   // Apply dynamic priority boosts from scenario
   let essentialIds = [...(scenario.essentialItems || [])];
@@ -193,17 +174,6 @@ export function calculateRoundScore() {
       if (newPriority === 'E' && !essentialIds.includes(itemId)) {
         essentialIds.push(itemId);
         // Remove from recommended if it was there
-        const recIdx = recommendedIds.indexOf(itemId);
-        if (recIdx > -1) recommendedIds.splice(recIdx, 1);
-      }
-    });
-  }
-  
-  // Apply profile modifications
-  if (profile && profile.modifiedItems) {
-    Object.entries(profile.modifiedItems).forEach(([itemId, priority]) => {
-      if (priority === 'E' && !essentialIds.includes(itemId)) {
-        essentialIds.push(itemId);
         const recIdx = recommendedIds.indexOf(itemId);
         if (recIdx > -1) recommendedIds.splice(recIdx, 1);
       }
@@ -243,16 +213,6 @@ export function calculateRoundScore() {
     balancedBonus = true;
   }
   
-  // Check for profile bonus
-  let profileBonus = false;
-  if (profile && profile.id !== 'general' && profile.modifiedItems) {
-    const profileItems = Object.keys(profile.modifiedItems);
-    const hasProfileItems = profileItems.some(itemId => state.bag.includes(itemId));
-    if (hasProfileItems) {
-      profileBonus = true;
-    }
-  }
-
   // WarioWare style: High requirement
   // Require at least 4 essentials for the current scenario to survive
   const minToPass = 4;
@@ -270,7 +230,6 @@ export function calculateRoundScore() {
     minToPass,
     message: passed ? '¡SOBREVIVISTE!' : 'NO ESTABAS PREPARADO',
     balancedBonus,
-    profileBonus,
     categoriesCovered: Array.from(categoriesCovered)
   };
 
