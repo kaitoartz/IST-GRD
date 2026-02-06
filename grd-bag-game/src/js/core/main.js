@@ -7,7 +7,8 @@ import {
   getRoundTime,
   loseLife,
   Leaderboard,
-  getItemsForScenario
+  getItemsForScenario,
+  saveCarryOverTime
 } from './state.js';
 import * as UI from '../ui/ui.js';
 import { setupClickHandlers } from '../interaction/dragdrop.js';
@@ -98,6 +99,12 @@ function gameTick() {
     }
   } else if (state.phase === 'action') {
     UI.updateHUD();
+
+    // Audiovisual feedback: Tick sound on last 5 seconds
+    if (state.timeLeft <= 5 && state.timeLeft > 0) {
+      UI.playSound('tick');
+    }
+
     if (state.timeLeft <= 0) {
       finishRound(true); // Time Up
     }
@@ -136,6 +143,14 @@ function setupBriefing() {
   const shuffled = [...scenarioItems].sort(() => 0.5 - Math.random());
   state.roundItems = shuffled.slice(0, Math.min(12, scenarioItems.length)); 
   
+  // Feature: Extra Time Item Injection (25% chance)
+  if (Math.random() < 0.25) {
+    const timeItem = state.items.find(i => i.id === 'time_extra');
+    if (timeItem) {
+       state.roundItems.push(timeItem);
+    }
+  }
+
   UI.renderTray(state.roundItems);
   UI.renderBag(state.items); // Reset Bag UI
 }
@@ -179,6 +194,11 @@ function finishRound(timeUp = false) {
         setTimeout(() => runPhase('results'), 2000); // Show debrief then results
         // Actually, let's show debrief first
       }
+    }
+  } else {
+    // Round Passed: Carry over time
+    if (!timeUp && state.timeLeft > 0) {
+      saveCarryOverTime(state.timeLeft);
     }
   }
 

@@ -53,6 +53,7 @@ export const state = {
 
   // Timer
   timeLeft: 0,
+  carriedOverTime: 0,
   timerInterval: null,
   isPaused: false,
 
@@ -101,6 +102,7 @@ export function initGame(mode, allItems, scenarios) {
   state.level = 1;
   state.lives = CONFIG.MODES.challenge.lives;
   state.isPaused = false;
+  state.carriedOverTime = 0;
 }
 
 export function startRound() {
@@ -184,7 +186,24 @@ export function getRoundTime() {
   // WarioWare style speed ramp
   // Start at 12s and reduce by 0.5s per level down to 5s
   let time = 12 - ((level - 1) * 0.5);
+
+  // Add carried over time from previous round
+  if (state.carriedOverTime > 0) {
+    time += state.carriedOverTime;
+    state.carriedOverTime = 0; // Consume it
+  }
+
   return Math.max(time, 5); 
+}
+
+export function addTime(seconds) {
+  state.timeLeft += seconds;
+}
+
+export function saveCarryOverTime(seconds) {
+  if (seconds > 0) {
+    state.carriedOverTime = seconds;
+  }
 }
 
 export function loseLife() {
