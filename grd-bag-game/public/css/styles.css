@@ -4,8 +4,10 @@
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
+  --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
 
@@ -75,6 +77,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 /* Accessibility: Skip Link */
 .skip-link {
   position: absolute;
@@ -103,6 +109,7 @@ body {
   font-weight: 700;
   background-color: var(--bg-main);
   color: var(--text-main);
+  overflow-x: hidden;
    /* Global styles removed for cleaner version */
 
 /* Background Texture & Gradients */
@@ -176,31 +183,67 @@ body.sc-apagon .background-pattern { background-image: radial-gradient(at 50% 0%
 /* --- INTRO SCREEN --- */
 .intro-card {
   max-width: 640px;
-  width: 100%;
-  padding: var(--space-8);
+  width: 95%;
+  padding: 0;
   text-align: center;
+  overflow: hidden;
 }
 
-.intro-hero-img {
-  width: 200px;
-  height: auto;
-  margin-bottom: var(--space-6);
-  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
+.intro-hero-container {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-8);
+}
+
+.intro-hero-container .intro-hero-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin-bottom: 0;
+  filter: brightness(0.8) contrast(1.1);
+}
+
+.intro-glass-overlay {
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: var(--space-6) var(--space-8);
+  border-radius: var(--radius-lg);
+  margin: var(--space-6);
+  max-width: 85%;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
 }
 
 .title-main {
-  font-size: var(--text-5xl);
+  font-size: var(--text-4xl);
   color: var(--accent-purple);
   font-weight: 900;
-  line-height: 1.1; /* Tighter for headings */
-  margin-bottom: var(--space-4);
+  line-height: 1.1;
+  margin-bottom: var(--space-2);
   letter-spacing: -0.025em;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 .intro-text {
-  font-size: var(--text-xl);
-  color: var(--text-muted);
-  margin-bottom: var(--space-8);
+  font-size: var(--text-lg);
+  color: var(--slate-800);
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+#btn-start {
+  margin-bottom: var(--space-4);
+  
 }
 
 .highlight-text {
@@ -464,6 +507,9 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
 .briefing-content {
   text-align: center;
   animation: slideIn 0.5s ease-out;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .briefing-title {
@@ -541,8 +587,8 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
 
 /* Leaderboard Styles */
 .leaderboard-mini {
-  margin-top: var(--space-12);
-  padding-top: var(--space-8);
+  margin-top: var(--space-1);
+  padding-top: var(--space-1);
   border-top: 1px solid var(--slate-100);
 }
 
@@ -899,8 +945,12 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
 .btn {
   border: none;
   cursor: pointer;
+  padding: var(--space-3) var(--space-8);
+  gap: var(--space-2);
   font-family: inherit;
+  font-size: var(--text-base);
   font-weight: 800;
+  line-height: 1.2;
   border-radius: 9999px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
@@ -963,7 +1013,13 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
   transform: translateY(-1px);
 }
 
-.btn-xl { padding: var(--space-5) var(--space-16); font-size: var(--text-2xl); border-radius: 20px; }
+.btn-xl { 
+  padding: var(--space-5) var(--space-16); 
+  font-size: var(--text-2xl); 
+  border-radius: 20px;
+  margin: 0 auto;
+  display: block;
+}
 .btn-lg { padding: var(--space-4) var(--space-10); font-size: var(--text-lg); }
 
 /* --- RESPONSIBLE MOTION --- */
@@ -1026,7 +1082,7 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
 
   .screen {
     padding: var(--space-2);
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .game-header {
@@ -1125,30 +1181,31 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
   .tray-header h3 { font-size: var(--text-lg); margin-bottom: var(--space-2); }
 
   .title-main { 
-    font-size: clamp(28px, 7vw, 40px);
-    margin-bottom: clamp(var(--space-2), 2vw, var(--space-4));
+    font-size: clamp(24px, 6vw, 32px);
+    margin-bottom: var(--space-1);
     color: var(--accent-purple);
     font-weight: 900;
     line-height: 1.1;
   }
 
   .intro-card { 
-    padding: clamp(var(--space-3), 4vw, var(--space-4));
     max-width: 100%;
     width: 100%;
     text-align: center;
   }
 
-  /* Optimized image handling for Core Web Vitals */
-  .intro-hero-img {
-    width: clamp(100px, 35vw, 200px);
-    height: auto;
-    margin-bottom: clamp(var(--space-3), 3vw, var(--space-6));
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border-radius: 8px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  .intro-hero-container {
+    min-height: 240px;
+    margin-bottom: var(--space-4);
   }
+
+  .intro-glass-overlay {
+    padding: var(--space-4) var(--space-4);
+    margin: var(--space-3);
+    max-width: 92%;
+  }
+
+  /* Optimized image handling for Core Web Vitals */
 
   .logo-area img {
     width: clamp(50px, 12vw, 70px);
@@ -1156,13 +1213,6 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
     aspect-ratio: 1 / 1;
     object-fit: contain;
     display: block;
-  }
-
-  .item-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    aspect-ratio: 1 / 1;
   }
 
   .intro-challenge-item img {
@@ -1197,8 +1247,8 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
 
   .intro-text {
     font-size: clamp(14px, 3vw, 16px);
-    line-height: 1.6;
-    margin-bottom: clamp(var(--space-2), 2vw, var(--space-4));
+    line-height: 1.4;
+    margin-bottom: 0;
   }
 
   .intro-challenge {
@@ -1262,29 +1312,15 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
     min-height: 110px;
     min-width: 80px;
     position: relative;
-  }
-
-  /* Ensure even smaller items have adequate touch area */
-  .item-card::after {
-    content: '';
-    position: absolute;
-    inset: -8px; /* Expand touch area */
-    pointer-events: none;
-    border-radius: inherit;
+    overflow: hidden;
   }
 
   .item-icon { 
-    width: clamp(36px, 12vw, 56px);
-    height: clamp(36px, 12vw, 56px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .item-icon img {
-    width: 100%;
-    height: 100%;
+    width: clamp(48px, 15vw, 64px);
+    height: clamp(48px, 15vw, 64px);
+    margin: 0 auto;
     object-fit: contain;
+    display: block;
   }
 
   .item-name { 
@@ -1439,6 +1475,7 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
     background-attachment: scroll;
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    overflow-x: hidden;
   }
 
   /* iOS safe area handling */
@@ -1610,6 +1647,19 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
       max-height: auto;
     }
   }
+
+  /* Mobile: Larger debrief elements */
+  #screen-debrief .debrief-result {
+    font-size: clamp(2rem, 8vw, 2.5rem);
+  }
+
+  #screen-debrief .debrief-icon {
+    font-size: clamp(3rem, 12vw, 4rem);
+  }
+
+  #screen-debrief .debrief-info {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+  }
 }
 
 /* Specific fix for very small screens (iPhone SE height) */
@@ -1730,6 +1780,32 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
 
   .items-grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Desktop: Larger briefing and debrief screens */
+  #screen-briefing .briefing-content {
+    max-width: 800px;
+    font-size: 1.2em;
+  }
+
+  #screen-briefing .briefing-task {
+    font-size: 2.5rem;
+  }
+
+  #screen-briefing .timer-countdown {
+    font-size: 3rem;
+  }
+
+  #screen-debrief .debrief-result {
+    font-size: 3rem;
+  }
+
+  #screen-debrief .debrief-icon {
+    font-size: 4rem;
+  }
+
+  #screen-debrief .debrief-info {
+    font-size: 1.5rem;
   }
 }
 }

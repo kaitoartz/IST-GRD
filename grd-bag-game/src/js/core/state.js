@@ -4,8 +4,8 @@ export const CONFIG = {
   MIN_ESSENTIALS_TO_PASS: 6, // Condición de victoria de la ronda
 
   // Tiempos en segundos
-  BRIEFING_TIME: 3,
-  DEBRIEF_TIME: 2,
+  BRIEFING_TIME: 4,
+  DEBRIEF_TIME: 3,
 
   MODES: {
     calm: {
