@@ -4,6 +4,7 @@
     "name": "Agua",
     "icon": "grd-bag-game/public/assets/icons/water.webp",
     "feedback": "El agua es vital para cualquier emergencia (2L al día).",
+    "category": "water",
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
@@ -16,6 +17,7 @@
     "name": "Comida",
     "icon": "grd-bag-game/public/assets/icons/food.webp",
     "feedback": "Alimentos no perecibles son básicos para resistir.",
+    "category": "energy",
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
@@ -28,6 +30,7 @@
     "name": "Linterna",
     "icon": "grd-bag-game/public/assets/icons/flashlight.webp",
     "feedback": "Vital si hay corte de luz o debes evacuar de noche.",
+    "category": "energy",
     "scenarios": {
       "terremoto": "E",
       "incendio": "R",
@@ -40,6 +43,7 @@
     "name": "Pilas",
     "icon": "grd-bag-game/public/assets/icons/batteries.webp",
     "feedback": "Para la linterna y radio. Siempre ten repuestos.",
+    "category": "energy",
     "scenarios": {
       "terremoto": "E",
       "incendio": "R",
@@ -52,6 +56,7 @@
     "name": "Botiquín",
     "icon": "grd-bag-game/public/assets/icons/medkit.webp",
     "feedback": "Básico para primeros auxilios y heridas leves.",
+    "category": "health",
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
@@ -64,6 +69,7 @@
     "name": "Silbato",
     "icon": "grd-bag-game/public/assets/icons/whistle.webp",
     "feedback": "Para pedir ayuda en caso de quedar atrapado.",
+    "category": "communication",
     "scenarios": {
       "terremoto": "E",
       "incendio": "R",
@@ -76,6 +82,7 @@
     "name": "Radio",
     "icon": "grd-bag-game/public/assets/icons/radio.webp",
     "feedback": "Para informarte si caen las redes de celular.",
+    "category": "communication",
     "scenarios": {
       "terremoto": "E",
       "incendio": "R",
@@ -88,6 +95,7 @@
     "name": "Documentos",
     "icon": "grd-bag-game/public/assets/icons/documents.webp",
     "feedback": "Identificación importante en bolsa hermética.",
+    "category": "communication",
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
@@ -100,6 +108,7 @@
     "name": "Mascarilla",
     "icon": "grd-bag-game/public/assets/icons/mask.webp",
     "feedback": "Especialmente vital en incendios por el humo.",
+    "category": "health",
     "scenarios": {
       "terremoto": "R",
       "incendio": "E",
@@ -112,6 +121,7 @@
     "name": "Manta",
     "icon": "grd-bag-game/public/assets/icons/blanket.webp",
     "feedback": "Contra el frío, pero en incendios es estorbosa.",
+    "category": "shelter",
     "scenarios": {
       "terremoto": "R",
       "incendio": "N",
@@ -124,6 +134,7 @@
     "name": "Efectivo",
     "icon": "grd-bag-game/public/assets/icons/money.webp",
     "feedback": "Útil si fallan los cajeros o red eléctrica.",
+    "category": "communication",
     "scenarios": {
       "terremoto": "R",
       "incendio": "N",
@@ -136,6 +147,7 @@
     "name": "Llaves",
     "icon": "grd-bag-game/public/assets/icons/keys.webp",
     "feedback": "Copia de llaves es muy útil al evacuar rápido.",
+    "category": "shelter",
     "scenarios": {
       "terremoto": "R",
       "incendio": "R",
@@ -148,6 +160,7 @@
     "name": "Laptop",
     "icon": "grd-bag-game/public/assets/icons/laptop.webp",
     "feedback": "Muy pesado y frágil. No ayuda a sobrevivir.",
+    "category": "none",
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
@@ -160,6 +173,7 @@
     "name": "Secador",
     "icon": "grd-bag-game/public/assets/icons/hairdryer.webp",
     "feedback": "Sin electricidad no sirve. Ocupa mucho espacio.",
+    "category": "none",
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
@@ -172,6 +186,7 @@
     "name": "Libro Grueso",
     "icon": "grd-bag-game/public/assets/icons/book.webp",
     "feedback": "Añade peso innecesario. Prioriza seguridad.",
+    "category": "none",
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
@@ -184,6 +199,7 @@
     "name": "Peluche",
     "icon": "grd-bag-game/public/assets/icons/plushie.webp",
     "feedback": "Ocupa espacio. Mejor algo muy pequeño si es necesario.",
+    "category": "none",
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
@@ -196,6 +212,7 @@
     "name": "Bonus Tiempo",
     "icon": "grd-bag-game/public/assets/icons/radio.webp",
     "feedback": "¡Tiempo extra! Úsalo con sabiduría.",
+    "category": "none",
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
