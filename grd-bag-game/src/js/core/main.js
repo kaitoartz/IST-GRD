@@ -7,8 +7,7 @@ import {
   getRoundTime,
   loseLife,
   Leaderboard,
-  getItemsForScenario,
-  saveCarryOverTime
+  getItemsForScenario
 } from './state.js';
 import * as UI from '../ui/ui.js';
 import { setupClickHandlers } from '../interaction/dragdrop.js';
@@ -66,9 +65,8 @@ function proceedToGame() {
     tutorial.classList.add('hidden');
   }
   
-  // Get selected mode from UI (default to challenge)
-  const modeSelect = document.querySelector('input[name="game-mode"]:checked');
-  const selectedMode = modeSelect ? modeSelect.value : 'challenge';
+  // Default to challenge mode
+  const selectedMode = 'challenge';
   
   initGame(selectedMode, ALL_ITEMS, ALL_SCENARIOS, ALL_PROFILES);
   runPhase('briefing');
@@ -98,21 +96,17 @@ function runPhase(phaseName) {
 function gameTick() {
   if (state.isPaused) return;
 
-  // Learning mode doesn't have a countdown
-  if (state.mode !== 'learning') {
-    state.timeLeft--;
-  }
-
-  if (state.phase === 'briefing') {
-    UI.updateBriefing("¡EMPACA LO VITAL!", state.timeLeft);
-    if (state.timeLeft <= 0) {
-      runPhase('action');
-    }
-  } else if (state.phase === 'action') {
-    UI.updateHUD();
-
-    // Only handle timer countdown in non-learning mode
+  // Manejo de tiempos según la fase
+  if (state.phase === 'action') {
+    // Solo disminuye el tiempo global durante la fase de acción
     if (state.mode !== 'learning') {
+      state.timeLeft--;
+      
+      // Feature: Random Time Bonus Activation (approx 8% chance per second)
+      if (Math.random() < 0.08 && !state.timeBonusCollected) {
+        UI.setTimeBonusState(true);
+      }
+
       // Audiovisual feedback: Tick sound on last 5 seconds
       if (state.timeLeft <= 5 && state.timeLeft > 0) {
         UI.playSound('tick');
@@ -122,10 +116,20 @@ function gameTick() {
         finishRound(true); // Time Up
       }
     }
-  } else if (state.phase === 'debrief') {
-    // Debrief is just a delay to show result
-    if (state.timeLeft <= 0) {
-      nextRound();
+    UI.updateHUD();
+  } else {
+    // En briefing o debrief, disminuye el temporizador de fase
+    state.phaseTime--;
+    
+    if (state.phase === 'briefing') {
+      UI.updateBriefing("¡EMPACA LO VITAL!", state.phaseTime);
+      if (state.phaseTime <= 0) {
+        runPhase('action');
+      }
+    } else if (state.phase === 'debrief') {
+      if (state.phaseTime <= 0) {
+        nextRound();
+      }
     }
   }
 }
@@ -134,7 +138,7 @@ function gameTick() {
 
 function setupBriefing() {
   UI.showScreen('briefing');
-  state.timeLeft = CONFIG.BRIEFING_TIME;
+  state.phaseTime = CONFIG.BRIEFING_TIME;
   UI.playSound('pop');
 
   // Prepare Round Data (Scenarios are chosen here)
@@ -144,26 +148,19 @@ function setupBriefing() {
     ? `${state.currentScenario.icon} ${state.currentScenario.briefingText || state.currentScenario.name}`
     : "¡PREPÁRATE!";
   
-  UI.updateBriefing(scenarioText, state.timeLeft);
+  UI.updateBriefing(scenarioText, state.phaseTime);
   bagAnimator.clearBag();
+  UI.setTimeBonusState(false); 
   
   // Filtrar items relevantes al escenario actual
   const scenarioItems = state.currentScenario 
     ? getItemsForScenario(state.currentScenario)
     : state.items;
   
-  // Randomize Items for the Tray: WarioWare style (Subset of items)
-  // Show 10-12 items from scenario-relevant items
-  const shuffled = [...scenarioItems].sort(() => 0.5 - Math.random());
-  state.roundItems = shuffled.slice(0, Math.min(12, scenarioItems.length)); 
-  
-  // Feature: Extra Time Item Injection (25% chance)
-  if (Math.random() < 0.25) {
-    const timeItem = state.items.find(i => i.id === 'time_extra');
-    if (timeItem) {
-       state.roundItems.push(timeItem);
-    }
-  }
+    // Randomize Items for the Tray: WarioWare style (Subset of items)
+    // Show 10-12 items from scenario-relevant items
+    const shuffled = [...scenarioItems].sort(() => 0.5 - Math.random());
+    state.roundItems = shuffled.slice(0, Math.min(12, scenarioItems.length)); 
 
   UI.renderTray(state.roundItems);
   UI.renderBag(state.items); // Reset Bag UI
@@ -176,7 +173,9 @@ function setupAction() {
   UI.renderTray(state.roundItems);
   UI.renderBag(state.items);
   
-  state.timeLeft = getRoundTime();
+  // ELIMINADO: state.timeLeft = getRoundTime(); 
+  // Ahora el tiempo es persistente desde la inicialización o ronda anterior
+  
   UI.updateHUD();
   
   // Initialize interaction handlers for this round
@@ -185,7 +184,7 @@ function setupAction() {
 
 function setupDebrief() {
   UI.showScreen('debrief');
-  state.timeLeft = CONFIG.DEBRIEF_TIME;
+  state.phaseTime = CONFIG.DEBRIEF_TIME;
   
   // Logic is handled in finishRound before calling this,
   // so we just show the result stored in state.
@@ -199,21 +198,35 @@ function finishRound(timeUp = false) {
   
   const result = calculateRoundScore();
 
-  // Check Win/Loss conditions
-  if (!result.passed) {
+  // Condition: Lose life if time up OR failed essentials
+  const isLoss = timeUp || !result.passed;
+
+if (isLoss) {
+    UI.shakeTimer?.();
+    bagAnimator.animateBackpack('shake');
+    
+    // Customize message if time up
+    if (timeUp) {
+      result.message = "¡TIEMPO AGOTADO!";
+      result.passed = false;
+    }
+
     if (state.mode === 'challenge') {
       const livesLeft = loseLife();
+      // Si tiene vidas disponibles, reinicia el tiempo a 20 segundos
+      if (livesLeft > 0 && timeUp) {
+        state.timeLeft = 20;
+        UI.updateHUD();
+        UI.showFeedback('¡Vida perdida!', `Tiempo reiniciado a 20 segundos. Vidas restantes: ${livesLeft}`, 'error');
+      }
       if (livesLeft <= 0) {
         state.phase = 'results';
-        setTimeout(() => runPhase('results'), 2000); // Show debrief then results
-        // Actually, let's show debrief first
+        setTimeout(() => runPhase('results'), 2000); 
       }
     }
   } else {
-    // Round Passed: Carry over time
-    if (!timeUp && state.timeLeft > 0) {
-      saveCarryOverTime(state.timeLeft);
-    }
+    // Success!
+    bagAnimator.celebrateSuccess();
   }
 
   runPhase('debrief');
@@ -263,6 +276,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   document.getElementById('btn-home').addEventListener('click', () => {
     UI.showScreen('intro');
+  });
+
+  // Time Bonus HUD Action
+  document.getElementById('time-bonus-btn').addEventListener('click', () => {
+    if (state.phase === 'action' && !state.isPaused && !state.timeBonusCollected) {
+      const btn = document.getElementById('time-bonus-btn');
+      if (btn.classList.contains('active')) {
+        state.timeLeft += 10;
+        state.timeBonusCollected = true;
+        
+        UI.animateTimeBonusClick();
+        UI.showTimeBonus(10, btn.getBoundingClientRect());
+        UI.playSound('success');
+        UI.pulseTimer?.();
+        UI.setTimeBonusState(false);
+      }
+    }
   });
 
   // Leaderboard save

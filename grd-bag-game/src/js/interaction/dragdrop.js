@@ -18,9 +18,15 @@ export function setupClickHandlers() {
 
     // Feature: Extra Time Item Interaction
     if (itemId === 'time_extra') {
-      addTime(5);
-      UI.playSound('success'); // or pop
-      UI.showFeedback('¡TIEMPO EXTRA!', '+5 Segundos', 'success');
+      const added = addTime(CONFIG.TIME.BONUS_ITEM_SECONDS);
+      UI.playSound('success'); // Bonus SFX
+      UI.pulseTimer?.();
+      UI.showFeedback('¡TIEMPO EXTRA!', `+${CONFIG.TIME.BONUS_ITEM_SECONDS} segundos (total ${added})`, 'success');
+      const backpackImg = document.getElementById('backpack-img');
+      UI.showTimeBonus(CONFIG.TIME.BONUS_ITEM_SECONDS, backpackImg ? backpackImg.getBoundingClientRect() : card.getBoundingClientRect());
+
+      // Marcar que se reclamó el bonus de tiempo para esta ronda
+      state.timeBonusCollected = true;
 
       // Remove from UI immediately
       card.style.opacity = '0';
@@ -29,9 +35,6 @@ export function setupClickHandlers() {
       // Also remove from state.roundItems so it doesn't reappear on re-render
       state.roundItems = state.roundItems.filter(i => i.id !== 'time_extra');
       return; // Early return for time_extra items
-    }
-
-      return;
     }
 
     const result = addToBag(itemId);
@@ -51,6 +54,11 @@ export function setupClickHandlers() {
         category: itemCategory
       });
 
+      // Score micro-feedback
+      const deltas = { E: CONFIG.POINTS.E, R: CONFIG.POINTS.R, N: CONFIG.POINTS.N };
+      const backpackImg = document.getElementById('backpack-img');
+      UI.showScorePopup(deltas[itemCategory] || 0, backpackImg ? backpackImg.getBoundingClientRect() : card.getBoundingClientRect(), itemCategory);
+
       UI.playSound('pop');
       
       let title = '¡Agregado!';
@@ -61,6 +69,7 @@ export function setupClickHandlers() {
       } else if (itemCategory === 'N') {
          title = 'No Prioritario';
          type = 'warning';
+         UI.shakeTimer?.();
       }
       
       UI.showFeedback(title, item.feedback || item.name, type);

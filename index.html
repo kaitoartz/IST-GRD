@@ -56,6 +56,20 @@
             <span class="step-num">4</span>
             <p>¡Tienes poco tiempo! Completa tu bolso de 8 ítems y presiona <strong>¡LISTO!</strong></p>
           </div>
+          <div class="step">
+            <span class="step-num">5</span>
+            <p>Si ves el reloj ⏰ activarse, <strong>¡pínchalo!</strong> Te dará +10 segundos vitales.</p>
+          </div>
+
+          <div class="scoring-guide">
+            <h3>SISTEMA DE PUNTUACIÓN</h3>
+            <div class="scoring-grid">
+              <div class="score-rule"><span class="badge vital">VITAL</span> <strong>+10</strong></div>
+              <div class="score-rule"><span class="badge extra">EXTRA</span> <strong>+5</strong></div>
+              <div class="score-rule"><span class="badge lujo">LUJO</span> <strong>-5</strong></div>
+              <div class="score-rule"><strong>RONDA</strong> <strong>+100</strong></div>
+            </div>
+          </div>
         </div>
         <button id="btn-close-tutorial" class="btn btn-primary btn-lg">¡ENTENDIDO!</button>
       </div>
@@ -71,21 +85,6 @@
             <p class="intro-text">
               Aprende a identificar lo indispensable en segundos ante cualquier desastre.
             </p>
-          </div>
-        </div>
-        
-        <!-- Mode Selection -->
-        <div class="mode-selector" style="margin: 1.5rem 0;">
-          <h3 style="font-size: 1rem; margin-bottom: 0.75rem; color: var(--text-light);">Selecciona Modo de Juego:</h3>
-          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <label class="mode-option" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-              <input type="radio" name="game-mode" value="challenge" checked style="width: 18px; height: 18px;">
-              <span style="font-size: 0.95rem;">⚡ Desafío (con tiempo y vidas)</span>
-            </label>
-            <label class="mode-option" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem; background: rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s;">
-              <input type="radio" name="game-mode" value="learning" style="width: 18px; height: 18px;">
-              <span style="font-size: 0.95rem;">📚 Aprendizaje (sin tiempo)</span>
-            </label>
           </div>
         </div>
         
@@ -126,10 +125,6 @@
         <div id="context-narrative" class="context-narrative" style="text-align: center; font-size: 0.85rem; padding: 0.5rem 1rem; max-width: 600px; margin: 0 auto; color: var(--text-light); display: none;">
         </div>
         
-        <!-- Profile Display -->
-        <div id="profile-display" class="profile-display" style="text-align: center; font-size: 0.8rem; padding: 0.25rem 0.5rem; color: var(--accent-light); display: none;">
-        </div>
-
         <div class="hud-stats">
           <div id="level-pill" class="level-pill">
             NIVEL <span id="level-val">1</span>
@@ -144,6 +139,10 @@
           
           <div class="timer-pill" id="timer-display">
             <span id="time-val">15</span>
+          </div>
+          
+          <div id="time-bonus-btn" class="time-bonus-bubble inactive" title="Bono de Tiempo">
+            ⏰
           </div>
         </div>
       </header>

@@ -7,6 +7,16 @@ export const CONFIG = {
   BRIEFING_TIME: 4,
   DEBRIEF_TIME: 3,
 
+  // Dinámicas de tiempo
+  TIME: {
+    BONUS_ITEM_SECONDS: 5,          // Segundos que otorga el ítem especial
+    CARRY_OVER_MAX_SECONDS: 8,      // Límite superior de tiempo que se arrastra a la siguiente ronda
+    CARRY_OVER_MIN_SECONDS: 0,      // No arrastrar negativos
+    MIN_ROUND_TIME: 5,              // Nunca menos de 5s por ronda
+    MAX_ROUND_TIME: 30,             // Evita exceder tiempos absurdos
+    FORCE_BONUS_SPAWN: true         // Asegura que el ítem de tiempo aparezca cada ronda
+  },
+
   MODES: {
     calm: {
       timeMin: 18,
@@ -61,9 +71,10 @@ export const state = {
 
   // Timer
   timeLeft: 0,
-  carriedOverTime: 0,
+  phaseTime: 0,     // Temporizador para fases de transición (briefing/debrief)
   timerInterval: null,
   isPaused: false,
+  timeBonusCollected: false,
 
   // Resultado de última ronda
   lastRoundResult: {
@@ -113,13 +124,16 @@ export function initGame(mode, allItems, scenarios, profiles = []) {
   state.level = 1;
   state.lives = mode === 'learning' ? Infinity : CONFIG.MODES[mode]?.lives || CONFIG.MODES.challenge.lives;
   state.isPaused = false;
-  state.carriedOverTime = 0;
   state.currentProfile = null;
+  
+  // Inicialización de tiempo global persistente
+  state.timeLeft = 20; // Empezamos con 20 segundos de base
 }
 
 export function startRound() {
   state.bag = []; 
   state.lastRoundResult = { passed: false, score: 0, message: '', balancedBonus: false, profileBonus: false };
+  state.timeBonusCollected = false;
   
   // Choose random scenario different from previous if possible
   if (state.scenarios.length > 0) {
@@ -279,24 +293,17 @@ export function getRoundTime() {
 
   let time = start - ((level - 1) * step);
 
-  // Add carried over time from previous round
-  if (state.carriedOverTime > 0) {
-    time += state.carriedOverTime;
-    state.carriedOverTime = 0; // Consume it
-  }
+  // Clamp to sensible bounds
+  time = Math.max(time, CONFIG.TIME.MIN_ROUND_TIME);
+  time = Math.min(time, CONFIG.TIME.MAX_ROUND_TIME);
 
-  // Ensure we don't go below 5s
-  return Math.max(time, 5); 
+  return time; 
 }
 
 export function addTime(seconds) {
-  state.timeLeft += seconds;
-}
-
-export function saveCarryOverTime(seconds) {
-  if (seconds > 0) {
-    state.carriedOverTime = seconds;
-  }
+  const capped = Math.max(0, Math.min(state.timeLeft + seconds, CONFIG.TIME.MAX_ROUND_TIME));
+  state.timeLeft = capped;
+  return capped;
 }
 
 export function loseLife() {
