@@ -24,6 +24,7 @@ const screens = {
   debrief: document.getElementById("screen-debrief"),
   pause: document.getElementById("screen-pause"),
   dailyChallenge: document.getElementById("screen-daily-challenge"),
+  tipsAlbum: document.getElementById("screen-tips-album"),
 };
 
 const toast = {
@@ -515,3 +516,66 @@ export function renderDailyLeaderboard(listEl, date = null) {
   // For now, just render an empty state
   listEl.innerHTML = '<li style="text-align: center; padding: var(--space-4); opacity: 0.6;">Sé el primero en jugar hoy</li>';
 }
+
+// --- Tips Album UI ---
+export function renderTipsAlbum(tips, progress) {
+  const progressBar = document.getElementById('tips-progress-bar');
+  const progressText = document.getElementById('tips-progress-text');
+  const tipsGrid = document.getElementById('tips-grid');
+  
+  // Update progress
+  if (progressBar) {
+    progressBar.style.width = `${progress.percentage}%`;
+  }
+  
+  if (progressText) {
+    progressText.textContent = `${progress.unlocked}/${progress.total} Desbloqueados (${progress.percentage}%)`;
+  }
+  
+  // Render tips grid
+  if (tipsGrid) {
+    renderTipsGrid(tips, 'all');
+  }
+  
+  // Setup filter buttons
+  setupTipsFilters(tips);
+}
+
+function renderTipsGrid(tips, filterCategory = 'all') {
+  const tipsGrid = document.getElementById('tips-grid');
+  if (!tipsGrid) return;
+  
+  const filteredTips = filterCategory === 'all' 
+    ? tips 
+    : tips.filter(tip => tip.category === filterCategory);
+  
+  tipsGrid.innerHTML = filteredTips.map(tip => `
+    <div class="tip-card ${tip.isUnlocked ? '' : 'locked'}">
+      <div class="tip-icon">${tip.icon}</div>
+      <div class="tip-title">${tip.title}</div>
+      <div class="tip-content">${tip.isUnlocked ? tip.content : 'Sigue jugando para desbloquear este tip'}</div>
+    </div>
+  `).join('');
+}
+
+function setupTipsFilters(tips) {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Remove active class from all buttons
+      filterButtons.forEach(b => b.classList.remove('active'));
+      // Add active class to clicked button
+      btn.classList.add('active');
+      
+      // Filter tips
+      const category = btn.dataset.category;
+      renderTipsGrid(tips, category);
+    });
+  });
+}
+
+export function showTipUnlockedNotification(tip) {
+  showFeedback('🎉 Nuevo Tip Desbloqueado!', tip.title, 'success');
+}
+

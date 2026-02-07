@@ -95,6 +95,10 @@
         <button id="btn-daily-challenge" class="btn btn-secondary btn-lg" style="margin-top: var(--space-3);">
           🏅 Desafío Diario
         </button>
+        
+        <button id="btn-tips-album" class="btn btn-secondary btn-lg" style="margin-top: var(--space-3);">
+          📚 Álbum de Tips
+        </button>
 
         <div class="leaderboard-mini">
           <h3>🏆 Mejores Puntajes</h3>
@@ -278,6 +282,42 @@
             ¡Jugar Desafío!
           </button>
           <button id="btn-back-from-daily" class="btn btn-secondary btn-lg">
+            ← Volver
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA: TIPS ALBUM -->
+    <section id="screen-tips-album" class="screen hidden">
+      <div class="tips-album-card glass-panel fade-in-up">
+        <div class="tips-header">
+          <h2>📚 Álbum de Tips</h2>
+          <div class="tips-progress">
+            <div class="progress-bar-container">
+              <div id="tips-progress-bar" class="progress-bar"></div>
+            </div>
+            <div id="tips-progress-text" class="progress-text">0/20 Desbloqueados</div>
+          </div>
+        </div>
+        
+        <div class="tips-filter">
+          <button class="filter-btn active" data-category="all">Todos</button>
+          <button class="filter-btn" data-category="water">💧 Agua</button>
+          <button class="filter-btn" data-category="energy">⚡ Energía</button>
+          <button class="filter-btn" data-category="health">🏥 Salud</button>
+          <button class="filter-btn" data-category="communication">📡 Comunicación</button>
+          <button class="filter-btn" data-category="shelter">🏕️ Refugio</button>
+          <button class="filter-btn" data-category="scenarios">🌋 Escenarios</button>
+          <button class="filter-btn" data-category="general">⭐ General</button>
+        </div>
+        
+        <div id="tips-grid" class="tips-grid custom-scroll">
+          <!-- Tips loaded dynamically -->
+        </div>
+        
+        <div class="actions">
+          <button id="btn-back-from-tips" class="btn btn-secondary btn-lg">
             ← Volver
           </button>
         </div>

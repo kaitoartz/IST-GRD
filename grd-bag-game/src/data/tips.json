@@ -1,0 +1,182 @@
+[
+  {
+    "id": "tip_water",
+    "title": "Agua Potable",
+    "content": "Almacena al menos 2 litros de agua por persona por día. El agua es lo más crítico para la supervivencia.",
+    "icon": "💧",
+    "category": "water",
+    "unlockCondition": "games_played",
+    "unlockValue": 1
+  },
+  {
+    "id": "tip_food",
+    "title": "Alimentos No Perecibles",
+    "content": "Elige alimentos que no requieran refrigeración ni preparación. Barras energéticas, frutos secos y enlatados son ideales.",
+    "icon": "🥫",
+    "category": "energy",
+    "unlockCondition": "games_played",
+    "unlockValue": 2
+  },
+  {
+    "id": "tip_documents",
+    "title": "Documentos Importantes",
+    "content": "Guarda copias de identificación, pólizas de seguro y documentos médicos en una bolsa impermeable.",
+    "icon": "📄",
+    "category": "communication",
+    "unlockCondition": "items_selected",
+    "unlockValue": 20
+  },
+  {
+    "id": "tip_first_aid",
+    "title": "Botiquín de Primeros Auxilios",
+    "content": "Incluye vendas, antisépticos, medicamentos básicos y cualquier medicación personal que necesites.",
+    "icon": "🏥",
+    "category": "health",
+    "unlockCondition": "scenarios_completed",
+    "unlockValue": 3
+  },
+  {
+    "id": "tip_communication",
+    "title": "Comunicación",
+    "content": "Un radio a pilas te mantiene informado cuando las redes celulares fallan. Incluye pilas extra.",
+    "icon": "📻",
+    "category": "communication",
+    "unlockCondition": "score_reached",
+    "unlockValue": 500
+  },
+  {
+    "id": "tip_shelter",
+    "title": "Refugio y Abrigo",
+    "content": "Una manta térmica ocupa poco espacio pero puede salvarte del frío. También considera una lona impermeable.",
+    "icon": "🏕️",
+    "category": "shelter",
+    "unlockCondition": "score_reached",
+    "unlockValue": 1000
+  },
+  {
+    "id": "tip_light",
+    "title": "Iluminación",
+    "content": "Una linterna LED con pilas recargables es esencial. Considera también una linterna de manivela que no requiere pilas.",
+    "icon": "🔦",
+    "category": "energy",
+    "unlockCondition": "items_selected",
+    "unlockValue": 50
+  },
+  {
+    "id": "tip_whistle",
+    "title": "Señal de Emergencia",
+    "content": "Un silbato puede ser escuchado a mucha mayor distancia que tu voz y requiere menos energía para usarlo.",
+    "icon": "📣",
+    "category": "communication",
+    "unlockCondition": "games_played",
+    "unlockValue": 5
+  },
+  {
+    "id": "tip_weight",
+    "title": "Control de Peso",
+    "content": "Tu bolso de emergencia debe pesar máximo 15kg. Prioriza artículos livianos y multiusos.",
+    "icon": "⚖️",
+    "category": "general",
+    "unlockCondition": "overweight_errors",
+    "unlockValue": 3
+  },
+  {
+    "id": "tip_volume",
+    "title": "Gestión del Espacio",
+    "content": "Optimiza el volumen usando bolsas de compresión. Cada centímetro cúbico cuenta en una emergencia.",
+    "icon": "📦",
+    "category": "general",
+    "unlockCondition": "overvolume_errors",
+    "unlockValue": 3
+  },
+  {
+    "id": "tip_cash",
+    "title": "Efectivo de Emergencia",
+    "content": "Guarda efectivo en denominaciones pequeñas. Los cajeros automáticos pueden no funcionar durante emergencias.",
+    "icon": "💰",
+    "category": "communication",
+    "unlockCondition": "scenarios_completed",
+    "unlockValue": 5
+  },
+  {
+    "id": "tip_hygiene",
+    "title": "Higiene Personal",
+    "content": "Incluye jabón, desinfectante de manos, papel higiénico y toallas húmedas para mantener la higiene.",
+    "icon": "🧼",
+    "category": "health",
+    "unlockCondition": "score_reached",
+    "unlockValue": 1500
+  },
+  {
+    "id": "tip_earthquake",
+    "title": "Terremoto: Preparación",
+    "content": "Durante un terremoto, busca refugio bajo mesas sólidas. Tu bolso debe estar siempre accesible.",
+    "icon": "🌋",
+    "category": "scenarios",
+    "unlockCondition": "scenario_played",
+    "unlockValue": "terremoto"
+  },
+  {
+    "id": "tip_fire",
+    "title": "Incendio: Evacuación",
+    "content": "En incendios, la velocidad es crítica. Mantén tu bolso cerca de la salida y usa mascarillas contra el humo.",
+    "icon": "🔥",
+    "category": "scenarios",
+    "unlockCondition": "scenario_played",
+    "unlockValue": "incendio"
+  },
+  {
+    "id": "tip_flood",
+    "title": "Inundación: Protección",
+    "content": "Guarda documentos en bolsas impermeables. Evacua a zonas altas y nunca cruces agua en movimiento.",
+    "icon": "🌊",
+    "category": "scenarios",
+    "unlockCondition": "scenario_played",
+    "unlockValue": "inundacion"
+  },
+  {
+    "id": "tip_blackout",
+    "title": "Apagón: Autonomía",
+    "content": "Durante apagones prolongados, la iluminación y comunicación son prioritarias. Ten velas y fósforos como respaldo.",
+    "icon": "🔦",
+    "category": "scenarios",
+    "unlockCondition": "scenario_played",
+    "unlockValue": "apagon"
+  },
+  {
+    "id": "tip_perfect",
+    "title": "Bolso Perfecto",
+    "content": "Un bolso bien equilibrado cubre las 5 categorías: agua, energía, salud, comunicación y refugio.",
+    "icon": "⭐",
+    "category": "general",
+    "unlockCondition": "perfect_bags",
+    "unlockValue": 3
+  },
+  {
+    "id": "tip_daily_streak",
+    "title": "Práctica Constante",
+    "content": "Jugar diariamente refuerza tu memoria muscular para responder rápido en emergencias reales.",
+    "icon": "🔥",
+    "category": "general",
+    "unlockCondition": "daily_streak",
+    "unlockValue": 7
+  },
+  {
+    "id": "tip_master",
+    "title": "Experto en Emergencias",
+    "content": "Has demostrado excelente preparación. Comparte tus conocimientos con familia y amigos.",
+    "icon": "🏆",
+    "category": "general",
+    "unlockCondition": "score_reached",
+    "unlockValue": 3000
+  },
+  {
+    "id": "tip_multi_use",
+    "title": "Artículos Multiusos",
+    "content": "Prioriza items que sirvan para múltiples propósitos. Una navaja suiza es mejor que múltiples herramientas.",
+    "icon": "🔧",
+    "category": "general",
+    "unlockCondition": "games_played",
+    "unlockValue": 10
+  }
+]

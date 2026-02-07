@@ -2196,4 +2196,174 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
     max-width: 200px;
   }
 }
+
+/* Tips Album Styles */
+.tips-album-card {
+  max-width: 900px;
+  margin: 0 auto;
 }
+
+.tips-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.tips-progress {
+  margin-top: var(--space-4);
+}
+
+.progress-bar-container {
+  background: rgba(0, 0, 0, 0.1);
+  height: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: var(--space-2);
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--dark));
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: var(--text-sm);
+}
+
+.progress-text {
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.tips-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+  margin-bottom: var(--space-4);
+  padding: var(--space-3);
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-lg);
+}
+
+.filter-btn {
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--primary);
+  background: white;
+  color: var(--primary);
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+  max-height: 500px;
+  overflow-y: auto;
+  padding: var(--space-4);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+}
+
+.tip-card {
+  background: white;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.tip-card.locked {
+  opacity: 0.6;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.tip-card.locked::before {
+  content: '🔒';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  filter: blur(0);
+}
+
+.tip-card:not(.locked):hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.tip-icon {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: var(--space-2);
+}
+
+.tip-title {
+  font-weight: 800;
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+  color: var(--dark);
+}
+
+.tip-content {
+  font-size: var(--text-sm);
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.tip-new-badge {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background: var(--accent);
+  color: white;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: 900;
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@media (max-width: 768px) {
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tips-filter {
+    gap: var(--space-1);
+  }
+  
+  .filter-btn {
+    font-size: 11px;
+    padding: var(--space-1) var(--space-2);
+  }
+}
+}
+

@@ -13,9 +13,11 @@ import * as UI from '../ui/ui.js';
 import { setupClickHandlers } from '../interaction/dragdrop.js';
 import { bagAnimator } from '../ui/bagAnimation.js';
 import { DailyChallenge } from './dailyChallenge.js';
+import { TipsAlbum } from './tipsAlbum.js';
 
 let ALL_ITEMS = [];
 let ALL_SCENARIOS = [];
+let ALL_TIPS = [];
 let gameLoopInterval = null;
 let isDailyMode = false;
 let currentDailyChallenge = null;
@@ -24,14 +26,21 @@ let currentDailyChallenge = null;
 
 async function loadData() {
   try {
-    const [itemsRes, scenariosRes] = await Promise.all([
+    const [itemsRes, scenariosRes, tipsRes] = await Promise.all([
       fetch('grd-bag-game/src/data/items.json'),
-      fetch('grd-bag-game/src/data/scenarios.json')
+      fetch('grd-bag-game/src/data/scenarios.json'),
+      fetch('grd-bag-game/src/data/tips.json')
     ]);
     ALL_ITEMS = await itemsRes.json();
     ALL_SCENARIOS = await scenariosRes.json();
+    ALL_TIPS = await tipsRes.json();
+    
+    // Initialize tips album
+    TipsAlbum.init(ALL_TIPS);
+    
     console.log('Items loaded:', ALL_ITEMS.length);
     console.log('Scenarios loaded:', ALL_SCENARIOS.length);
+    console.log('Tips loaded:', ALL_TIPS.length);
   } catch (e) {
     console.error('Error loading data:', e);
     // Fallback UI error?
@@ -285,6 +294,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
   
+  const btnTipsAlbum = document.getElementById('btn-tips-album');
+  const btnBackFromTips = document.getElementById('btn-back-from-tips');
+  
+  if (btnTipsAlbum) {
+    btnTipsAlbum.addEventListener('click', showTipsAlbum);
+  }
+  
+  if (btnBackFromTips) {
+    btnBackFromTips.addEventListener('click', () => {
+      UI.showScreen('intro');
+    });
+  }
+  
   if (btnRetry) {
     btnRetry.addEventListener('click', () => {
       if (isDailyMode) {
@@ -458,3 +480,21 @@ function showDailyLeaderboardInResults() {
     }
   }
 }
+
+// --- Tips Album Functions ---
+
+function showTipsAlbum() {
+  // Update daily streak from daily challenge
+  const stats = TipsAlbum.getStats();
+  const dailyStreak = DailyChallenge.getStreak();
+  if (dailyStreak !== stats.dailyStreak) {
+    TipsAlbum.updateStats({ dailyStreak: dailyStreak });
+  }
+  
+  const tips = TipsAlbum.getAllTipsWithStatus();
+  const progress = TipsAlbum.getProgress();
+  
+  UI.renderTipsAlbum(tips, progress);
+  UI.showScreen('tipsAlbum');
+}
+
