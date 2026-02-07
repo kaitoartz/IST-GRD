@@ -91,6 +91,18 @@
         <button id="btn-start" class="btn btn-primary btn-xl pulse-anim">
           ¡JUGAR!
         </button>
+        
+        <button id="btn-daily-challenge" class="btn btn-secondary btn-lg" style="margin-top: var(--space-3);">
+          🏅 Desafío Diario
+        </button>
+        
+        <button id="btn-tips-album" class="btn btn-secondary btn-lg" style="margin-top: var(--space-3);">
+          📚 Álbum de Tips
+        </button>
+        
+        <button id="btn-stats" class="btn btn-secondary btn-lg" style="margin-top: var(--space-3);">
+          📊 Estadísticas
+        </button>
 
         <div class="leaderboard-mini">
           <h3>🏆 Mejores Puntajes</h3>
@@ -169,6 +181,16 @@
               <div id="bag-counter" class="bag-counter">
                 <span id="bag-count">0</span>/8
               </div>
+              <div id="bag-stats" class="bag-stats">
+                <div class="stat-item">
+                  <span class="stat-icon">⚖️</span>
+                  <span id="bag-weight">0.0</span>/<span class="stat-max">15</span> kg
+                </div>
+                <div class="stat-item">
+                  <span class="stat-icon">📦</span>
+                  <span id="bag-volume">0.0</span>/<span class="stat-max">40</span> L
+                </div>
+              </div>
               <div id="bag-items-preview" class="bag-items-preview">
                 <!-- Items se mostrarán aquí como thumbnails -->
               </div>
@@ -225,6 +247,134 @@
         <div class="actions">
           <button id="btn-retry" class="btn btn-primary btn-xl">🔄 Jugar de Nuevo</button>
           <button id="btn-home" class="btn btn-secondary btn-lg home-btn">🏠 Inicio</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA: DAILY CHALLENGE INFO -->
+    <section id="screen-daily-challenge" class="screen hidden">
+      <div class="daily-challenge-card glass-panel fade-in-up">
+        <div class="daily-header">
+          <h2>🏅 Desafío Diario</h2>
+          <div id="daily-date" class="daily-date"></div>
+        </div>
+        
+        <div id="daily-scenario-info" class="scenario-info">
+          <!-- Scenario details loaded dynamically -->
+        </div>
+        
+        <div class="daily-stats">
+          <div class="stat-box">
+            <div class="stat-value" id="daily-streak">0</div>
+            <div class="stat-label">Días Seguidos</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="daily-total">0</div>
+            <div class="stat-label">Días Jugados</div>
+          </div>
+        </div>
+        
+        <div class="daily-leaderboard">
+          <h3>🏆 Ranking de Hoy</h3>
+          <ul id="daily-leaderboard-list" class="leaderboard-list">
+            <!-- Loaded dynamically -->
+          </ul>
+        </div>
+        
+        <div class="actions">
+          <button id="btn-start-daily" class="btn btn-primary btn-xl pulse-anim">
+            ¡Jugar Desafío!
+          </button>
+          <button id="btn-back-from-daily" class="btn btn-secondary btn-lg">
+            ← Volver
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA: TIPS ALBUM -->
+    <section id="screen-tips-album" class="screen hidden">
+      <div class="tips-album-card glass-panel fade-in-up">
+        <div class="tips-header">
+          <h2>📚 Álbum de Tips</h2>
+          <div class="tips-progress">
+            <div class="progress-bar-container">
+              <div id="tips-progress-bar" class="progress-bar"></div>
+            </div>
+            <div id="tips-progress-text" class="progress-text">0/20 Desbloqueados</div>
+          </div>
+        </div>
+        
+        <div class="tips-filter">
+          <button class="filter-btn active" data-category="all">Todos</button>
+          <button class="filter-btn" data-category="water">💧 Agua</button>
+          <button class="filter-btn" data-category="energy">⚡ Energía</button>
+          <button class="filter-btn" data-category="health">🏥 Salud</button>
+          <button class="filter-btn" data-category="communication">📡 Comunicación</button>
+          <button class="filter-btn" data-category="shelter">🏕️ Refugio</button>
+          <button class="filter-btn" data-category="scenarios">🌋 Escenarios</button>
+          <button class="filter-btn" data-category="general">⭐ General</button>
+        </div>
+        
+        <div id="tips-grid" class="tips-grid custom-scroll">
+          <!-- Tips loaded dynamically -->
+        </div>
+        
+        <div class="actions">
+          <button id="btn-back-from-tips" class="btn btn-secondary btn-lg">
+            ← Volver
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA: STATISTICS -->
+    <section id="screen-stats" class="screen hidden">
+      <div class="stats-card glass-panel fade-in-up">
+        <div class="stats-header">
+          <h2>📊 Estadísticas del Juego</h2>
+        </div>
+        
+        <div class="stats-overview">
+          <div class="stat-box-small">
+            <div class="stat-value-small" id="stat-total-games">0</div>
+            <div class="stat-label-small">Partidas Jugadas</div>
+          </div>
+          <div class="stat-box-small">
+            <div class="stat-value-small" id="stat-completion-rate">0%</div>
+            <div class="stat-label-small">Tasa de Éxito</div>
+          </div>
+          <div class="stat-box-small">
+            <div class="stat-value-small" id="stat-items-selected">0</div>
+            <div class="stat-label-small">Items Seleccionados</div>
+          </div>
+        </div>
+        
+        <div class="stats-section">
+          <h3>🎯 Items Más Seleccionados</h3>
+          <div id="top-items-list" class="stats-list custom-scroll">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+        
+        <div class="stats-section">
+          <h3>🌋 Rendimiento por Escenario</h3>
+          <div id="scenario-stats-list" class="stats-list custom-scroll">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+        
+        <div class="stats-section">
+          <h3>📈 Distribución de Puntajes</h3>
+          <div id="score-distribution-chart" class="stats-chart">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button id="btn-back-from-stats" class="btn btn-secondary btn-lg">
+            ← Volver
+          </button>
         </div>
       </div>
     </section>

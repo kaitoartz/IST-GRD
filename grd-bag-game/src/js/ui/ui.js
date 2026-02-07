@@ -23,6 +23,9 @@ const screens = {
   briefing: document.getElementById("screen-briefing"),
   debrief: document.getElementById("screen-debrief"),
   pause: document.getElementById("screen-pause"),
+  dailyChallenge: document.getElementById("screen-daily-challenge"),
+  tipsAlbum: document.getElementById("screen-tips-album"),
+  stats: document.getElementById("screen-stats"),
 };
 
 const toast = {
@@ -236,6 +239,54 @@ export function updateHUD() {
   } else if (levelPill) {
     levelPill.innerHTML = `NIVEL <span id="level-val">${state.level}</span>`;
   }
+  
+  // Update bag weight and volume displays
+  updateBagStats();
+}
+
+export function updateBagStats() {
+  const bagWeight = state.bag.reduce((total, itemId) => {
+    const item = state.items.find(i => i.id === itemId);
+    return total + (item?.weight || 0);
+  }, 0);
+  
+  const bagVolume = state.bag.reduce((total, itemId) => {
+    const item = state.items.find(i => i.id === itemId);
+    return total + (item?.volume || 0);
+  }, 0);
+  
+  const weightEl = document.getElementById("bag-weight");
+  const volumeEl = document.getElementById("bag-volume");
+  
+  if (weightEl) {
+    weightEl.textContent = bagWeight.toFixed(1);
+    // Highlight if approaching limit
+    const statsContainer = weightEl.closest('.stat-item');
+    if (statsContainer) {
+      if (bagWeight > CONFIG.MAX_WEIGHT * 0.9) {
+        statsContainer.style.color = 'var(--danger)';
+      } else if (bagWeight > CONFIG.MAX_WEIGHT * 0.75) {
+        statsContainer.style.color = 'var(--warning)';
+      } else {
+        statsContainer.style.color = '';
+      }
+    }
+  }
+  
+  if (volumeEl) {
+    volumeEl.textContent = bagVolume.toFixed(1);
+    // Highlight if approaching limit
+    const statsContainer = volumeEl.closest('.stat-item');
+    if (statsContainer) {
+      if (bagVolume > CONFIG.MAX_VOLUME * 0.9) {
+        statsContainer.style.color = 'var(--danger)';
+      } else if (bagVolume > CONFIG.MAX_VOLUME * 0.75) {
+        statsContainer.style.color = 'var(--warning)';
+      } else {
+        statsContainer.style.color = '';
+      }
+    }
+  }
 }
 
 // --- Rendering ---
@@ -427,3 +478,190 @@ export function animateTimeBonusClick() {
   btn.classList.add("bubble-pop");
   setTimeout(() => btn.classList.remove("bubble-pop"), 400);
 }
+
+// --- Daily Challenge UI ---
+export function renderDailyChallengeScreen(challenge, stats) {
+  const dateEl = document.getElementById("daily-date");
+  const scenarioEl = document.getElementById("daily-scenario-info");
+  const streakEl = document.getElementById("daily-streak");
+  const totalEl = document.getElementById("daily-total");
+  const leaderboardEl = document.getElementById("daily-leaderboard-list");
+  
+  if (dateEl) {
+    dateEl.textContent = challenge.description;
+  }
+  
+  if (scenarioEl && challenge.scenario) {
+    // Use textContent to prevent XSS
+    scenarioEl.innerHTML = ''; // Clear first
+    const iconDiv = document.createElement('div');
+    iconDiv.style.fontSize = '2rem';
+    iconDiv.style.marginBottom = 'var(--space-2)';
+    iconDiv.textContent = challenge.scenario.icon;
+    
+    const nameHeading = document.createElement('h3');
+    nameHeading.textContent = challenge.scenario.name;
+    
+    const descPara = document.createElement('p');
+    descPara.style.marginTop = 'var(--space-2)';
+    descPara.textContent = challenge.scenario.contextNarrative || challenge.scenario.description;
+    
+    scenarioEl.appendChild(iconDiv);
+    scenarioEl.appendChild(nameHeading);
+    scenarioEl.appendChild(descPara);
+  }
+  
+  if (streakEl) {
+    streakEl.textContent = stats.currentStreak;
+  }
+  
+  if (totalEl) {
+    totalEl.textContent = stats.totalDaysPlayed;
+  }
+  
+  if (leaderboardEl) {
+    renderDailyLeaderboard(leaderboardEl, challenge.date);
+  }
+}
+
+export function renderDailyLeaderboard(listEl, date = null) {
+  // This will be imported from dailyChallenge in main.js
+  // For now, just render an empty state
+  listEl.innerHTML = '<li style="text-align: center; padding: var(--space-4); opacity: 0.6;">Sé el primero en jugar hoy</li>';
+}
+
+// --- Tips Album UI ---
+export function renderTipsAlbum(tips, progress) {
+  const progressBar = document.getElementById('tips-progress-bar');
+  const progressText = document.getElementById('tips-progress-text');
+  const tipsGrid = document.getElementById('tips-grid');
+  
+  // Update progress
+  if (progressBar) {
+    progressBar.style.width = `${progress.percentage}%`;
+  }
+  
+  if (progressText) {
+    progressText.textContent = `${progress.unlocked}/${progress.total} Desbloqueados (${progress.percentage}%)`;
+  }
+  
+  // Render tips grid
+  if (tipsGrid) {
+    renderTipsGrid(tips, 'all');
+  }
+  
+  // Setup filter buttons
+  setupTipsFilters(tips);
+}
+
+function renderTipsGrid(tips, filterCategory = 'all') {
+  const tipsGrid = document.getElementById('tips-grid');
+  if (!tipsGrid) return;
+  
+  const filteredTips = filterCategory === 'all' 
+    ? tips 
+    : tips.filter(tip => tip.category === filterCategory);
+  
+  tipsGrid.innerHTML = filteredTips.map(tip => `
+    <div class="tip-card ${tip.isUnlocked ? '' : 'locked'}">
+      <div class="tip-icon">${tip.icon}</div>
+      <div class="tip-title">${tip.title}</div>
+      <div class="tip-content">${tip.isUnlocked ? tip.content : 'Sigue jugando para desbloquear este tip'}</div>
+    </div>
+  `).join('');
+}
+
+function setupTipsFilters(tips) {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Remove active class from all buttons
+      filterButtons.forEach(b => b.classList.remove('active'));
+      // Add active class to clicked button
+      btn.classList.add('active');
+      
+      // Filter tips
+      const category = btn.dataset.category;
+      renderTipsGrid(tips, category);
+    });
+  });
+}
+
+export function showTipUnlockedNotification(tip) {
+  showFeedback('🎉 Nuevo Tip Desbloqueado!', tip.title, 'success');
+}
+
+// --- Statistics UI ---
+export function renderStats(overallStats, topItems, scenarioStats, scoreDistribution, itemsMap) {
+  // Update overview
+  document.getElementById('stat-total-games').textContent = overallStats.totalGames || 0;
+  document.getElementById('stat-completion-rate').textContent = `${overallStats.overallCompletionRate || 0}%`;
+  document.getElementById('stat-items-selected').textContent = overallStats.totalItemSelections || 0;
+  
+  // Render top items
+  const topItemsList = document.getElementById('top-items-list');
+  if (topItemsList && topItems.length > 0) {
+    topItemsList.innerHTML = topItems.map((item, idx) => {
+      const itemData = itemsMap[item.itemId];
+      const itemName = itemData ? itemData.name : item.itemId;
+      return `
+        <div class="stats-item">
+          <span class="stats-item-name">#${idx + 1} ${itemName}</span>
+          <span class="stats-item-value">${item.totalSelections}</span>
+        </div>
+      `;
+    }).join('');
+  } else if (topItemsList) {
+    topItemsList.innerHTML = '<p style="text-align: center; opacity: 0.6;">No hay datos todavía</p>';
+  }
+  
+  // Render scenario stats
+  const scenarioStatsList = document.getElementById('scenario-stats-list');
+  if (scenarioStatsList && Object.keys(scenarioStats).length > 0) {
+    scenarioStatsList.innerHTML = Object.entries(scenarioStats).map(([id, stats]) => {
+      const completionRate = stats.totalAttempts > 0 
+        ? Math.round((stats.completions / stats.totalAttempts) * 100)
+        : 0;
+      return `
+        <div class="stats-item">
+          <div>
+            <div class="stats-item-name">${id.charAt(0).toUpperCase() + id.slice(1)}</div>
+            <div style="font-size: var(--text-xs); color: var(--text-light);">
+              ${stats.completions}/${stats.totalAttempts} completados
+            </div>
+          </div>
+          <span class="stats-item-value">${completionRate}%</span>
+        </div>
+      `;
+    }).join('');
+  } else if (scenarioStatsList) {
+    scenarioStatsList.innerHTML = '<p style="text-align: center; opacity: 0.6;">No hay datos todavía</p>';
+  }
+  
+  // Render score distribution
+  const scoreChart = document.getElementById('score-distribution-chart');
+  if (scoreChart && Object.keys(scoreDistribution).length > 0) {
+    const maxCount = Math.max(...Object.values(scoreDistribution).map(d => d.count));
+    scoreChart.innerHTML = Object.entries(scoreDistribution)
+      .sort((a, b) => {
+        const order = ['negative', '0-99', '100-299', '300-499', '500-999', '1000-1999', '2000-2999', '3000+'];
+        return order.indexOf(a[0]) - order.indexOf(b[0]);
+      })
+      .map(([range, data]) => {
+        const percentage = maxCount > 0 ? (data.count / maxCount) * 100 : 0;
+        return `
+          <div class="chart-bar">
+            <div class="chart-label">${range}</div>
+            <div class="chart-bar-fill" style="width: ${percentage}%;">
+              ${data.count} partidas
+            </div>
+          </div>
+        `;
+      }).join('');
+  } else if (scoreChart) {
+    scoreChart.innerHTML = '<p style="text-align: center; opacity: 0.6;">No hay datos todavía</p>';
+  }
+}
+
+

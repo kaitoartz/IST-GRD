@@ -5,6 +5,8 @@
     "icon": "grd-bag-game/public/assets/icons/water.webp",
     "feedback": "El agua es vital para cualquier emergencia (2L al día).",
     "category": "water",
+    "weight": 2.0,
+    "volume": 2.0,
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
@@ -18,6 +20,8 @@
     "icon": "grd-bag-game/public/assets/icons/food.webp",
     "feedback": "Alimentos no perecibles son básicos para resistir.",
     "category": "energy",
+    "weight": 1.5,
+    "volume": 2.5,
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
@@ -31,6 +35,8 @@
     "icon": "grd-bag-game/public/assets/icons/flashlight.webp",
     "feedback": "Vital si hay corte de luz o debes evacuar de noche.",
     "category": "energy",
+    "weight": 0.3,
+    "volume": 0.5,
     "scenarios": {
       "terremoto": "E",
       "incendio": "R",
@@ -44,6 +50,8 @@
     "icon": "grd-bag-game/public/assets/icons/batteries.webp",
     "feedback": "Para la linterna y radio. Siempre ten repuestos.",
     "category": "energy",
+    "weight": 0.2,
+    "volume": 0.3,
     "scenarios": {
       "terremoto": "E",
       "incendio": "R",
@@ -57,6 +65,8 @@
     "icon": "grd-bag-game/public/assets/icons/medkit.webp",
     "feedback": "Básico para primeros auxilios y heridas leves.",
     "category": "health",
+    "weight": 0.8,
+    "volume": 1.5,
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
@@ -70,6 +80,8 @@
     "icon": "grd-bag-game/public/assets/icons/whistle.webp",
     "feedback": "Para pedir ayuda en caso de quedar atrapado.",
     "category": "communication",
+    "weight": 0.05,
+    "volume": 0.1,
     "scenarios": {
       "terremoto": "E",
       "incendio": "R",
@@ -83,6 +95,8 @@
     "icon": "grd-bag-game/public/assets/icons/radio.webp",
     "feedback": "Para informarte si caen las redes de celular.",
     "category": "communication",
+    "weight": 0.4,
+    "volume": 0.8,
     "scenarios": {
       "terremoto": "E",
       "incendio": "R",
@@ -96,6 +110,8 @@
     "icon": "grd-bag-game/public/assets/icons/documents.webp",
     "feedback": "Identificación importante en bolsa hermética.",
     "category": "communication",
+    "weight": 0.1,
+    "volume": 0.2,
     "scenarios": {
       "terremoto": "E",
       "incendio": "E",
@@ -109,6 +125,8 @@
     "icon": "grd-bag-game/public/assets/icons/mask.webp",
     "feedback": "Especialmente vital en incendios por el humo.",
     "category": "health",
+    "weight": 0.05,
+    "volume": 0.15,
     "scenarios": {
       "terremoto": "R",
       "incendio": "E",
@@ -122,6 +140,8 @@
     "icon": "grd-bag-game/public/assets/icons/blanket.webp",
     "feedback": "Contra el frío, pero en incendios es estorbosa.",
     "category": "shelter",
+    "weight": 1.2,
+    "volume": 3.0,
     "scenarios": {
       "terremoto": "R",
       "incendio": "N",
@@ -135,6 +155,8 @@
     "icon": "grd-bag-game/public/assets/icons/money.webp",
     "feedback": "Útil si fallan los cajeros o red eléctrica.",
     "category": "communication",
+    "weight": 0.02,
+    "volume": 0.05,
     "scenarios": {
       "terremoto": "R",
       "incendio": "N",
@@ -148,6 +170,8 @@
     "icon": "grd-bag-game/public/assets/icons/keys.webp",
     "feedback": "Copia de llaves es muy útil al evacuar rápido.",
     "category": "shelter",
+    "weight": 0.1,
+    "volume": 0.1,
     "scenarios": {
       "terremoto": "R",
       "incendio": "R",
@@ -161,6 +185,8 @@
     "icon": "grd-bag-game/public/assets/icons/laptop.webp",
     "feedback": "Muy pesado y frágil. No ayuda a sobrevivir.",
     "category": "none",
+    "weight": 2.5,
+    "volume": 4.0,
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
@@ -174,6 +200,8 @@
     "icon": "grd-bag-game/public/assets/icons/hairdryer.webp",
     "feedback": "Sin electricidad no sirve. Ocupa mucho espacio.",
     "category": "none",
+    "weight": 0.6,
+    "volume": 2.0,
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
@@ -187,6 +215,8 @@
     "icon": "grd-bag-game/public/assets/icons/book.webp",
     "feedback": "Añade peso innecesario. Prioriza seguridad.",
     "category": "none",
+    "weight": 0.8,
+    "volume": 1.5,
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
@@ -200,6 +230,8 @@
     "icon": "grd-bag-game/public/assets/icons/plushie.webp",
     "feedback": "Ocupa espacio. Mejor algo muy pequeño si es necesario.",
     "category": "none",
+    "weight": 0.3,
+    "volume": 2.5,
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",
@@ -213,6 +245,8 @@
     "icon": "grd-bag-game/public/assets/icons/radio.webp",
     "feedback": "¡Tiempo extra! Úsalo con sabiduría.",
     "category": "none",
+    "weight": 0.0,
+    "volume": 0.0,
     "scenarios": {
       "terremoto": "N",
       "incendio": "N",

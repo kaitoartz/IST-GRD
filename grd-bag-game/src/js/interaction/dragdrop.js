@@ -1,6 +1,8 @@
 import { state, addToBag, removeFromBag, CONFIG, getItemCategory, addTime } from '../core/state.js';
 import * as UI from '../ui/ui.js';
 import { bagAnimator } from '../ui/bagAnimation.js';
+import { TipsAlbum } from '../core/tipsAlbum.js';
+import { Telemetry } from '../core/telemetry.js';
 
 export function setupClickHandlers() {
   const trayList = document.getElementById('tray-list');
@@ -43,8 +45,23 @@ export function setupClickHandlers() {
       const item = state.items.find(i => i.id === itemId);
       const itemCategory = getItemCategory(itemId, state.currentScenario);
       
+      // Track item selection for tips album
+      TipsAlbum.trackItemSelection();
+      
+      // Track for telemetry
+      const isEssential = itemCategory === 'E';
+      Telemetry.trackItemSelection(
+        itemId, 
+        state.currentScenario?.id, 
+        isEssential, 
+        true
+      );
+      
       // Primero actualizamos el tray para mostrar el estado "ghost"
       UI.renderTray(state.roundItems || state.items);
+      
+      // Update bag stats display
+      UI.updateBagStats();
       
       // Lanzamos la animación de vuelo
       await bagAnimator.animateClickToBag(card, {
@@ -85,6 +102,16 @@ export function setupClickHandlers() {
          bagAnimator.animateBackpack('shake');
        }
        else if (result.reason === 'duplicate') UI.showFeedback('Atención', 'Ya lo tienes.', 'warning');
+       else if (result.reason === 'overweight') {
+         UI.showFeedback('Demasiado Pesado', `Límite: ${CONFIG.MAX_WEIGHT}kg. Actual: ${result.currentWeight.toFixed(1)}kg`, 'error');
+         bagAnimator.animateBackpack('shake');
+         TipsAlbum.trackWeightError();
+       }
+       else if (result.reason === 'overvolume') {
+         UI.showFeedback('Sin Espacio', `Límite: ${CONFIG.MAX_VOLUME}L. Actual: ${result.currentVolume.toFixed(1)}L`, 'error');
+         bagAnimator.animateBackpack('shake');
+         TipsAlbum.trackVolumeError();
+       }
     }
   };
 
@@ -98,6 +125,7 @@ export function setupClickHandlers() {
     UI.playSound('pop');
     removeFromBag(itemId);
     bagAnimator.removeItemFromBag(itemId);
+    UI.updateBagStats(); // Update weight/volume display
     UI.showFeedback('Removido', 'Espacio liberado.', 'info');
     UI.renderTray(state.roundItems || state.items);
   };

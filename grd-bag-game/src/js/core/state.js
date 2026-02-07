@@ -2,6 +2,10 @@
 export const CONFIG = {
   SLOTS_MAX: 8,
   MIN_ESSENTIALS_TO_PASS: 6, // Condición de victoria de la ronda
+  
+  // Límites de peso y volumen
+  MAX_WEIGHT: 15, // kg
+  MAX_VOLUME: 40, // L
 
   // Tiempos en segundos
   BRIEFING_TIME: 6,
@@ -139,12 +143,42 @@ export function startRound() {
   }
 }
 
+// Calculate current bag weight
+export function getBagWeight() {
+  return state.bag.reduce((total, itemId) => {
+    const item = state.items.find(i => i.id === itemId);
+    return total + (item?.weight || 0);
+  }, 0);
+}
+
+// Calculate current bag volume
+export function getBagVolume() {
+  return state.bag.reduce((total, itemId) => {
+    const item = state.items.find(i => i.id === itemId);
+    return total + (item?.volume || 0);
+  }, 0);
+}
+
 export function addToBag(itemId) {
   if (state.phase !== 'action') return { success: false, reason: 'wrong_phase' };
   if (state.isPaused) return { success: false, reason: 'paused' };
 
   if (state.bag.length >= CONFIG.SLOTS_MAX) return { success: false, reason: 'full' };
   if (state.bag.includes(itemId)) return { success: false, reason: 'duplicate' };
+
+  // Check weight and volume constraints
+  const item = state.items.find(i => i.id === itemId);
+  if (item) {
+    const newWeight = getBagWeight() + (item.weight || 0);
+    const newVolume = getBagVolume() + (item.volume || 0);
+    
+    if (newWeight > CONFIG.MAX_WEIGHT) {
+      return { success: false, reason: 'overweight', currentWeight: getBagWeight(), maxWeight: CONFIG.MAX_WEIGHT };
+    }
+    if (newVolume > CONFIG.MAX_VOLUME) {
+      return { success: false, reason: 'overvolume', currentVolume: getBagVolume(), maxVolume: CONFIG.MAX_VOLUME };
+    }
+  }
 
   state.bag.push(itemId);
   return { success: true };

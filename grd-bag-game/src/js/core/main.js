@@ -12,23 +12,36 @@ import {
 import * as UI from '../ui/ui.js';
 import { setupClickHandlers } from '../interaction/dragdrop.js';
 import { bagAnimator } from '../ui/bagAnimation.js';
+import { DailyChallenge } from './dailyChallenge.js';
+import { TipsAlbum } from './tipsAlbum.js';
+import { Telemetry } from './telemetry.js';
 
 let ALL_ITEMS = [];
 let ALL_SCENARIOS = [];
+let ALL_TIPS = [];
 let gameLoopInterval = null;
+let isDailyMode = false;
+let currentDailyChallenge = null;
 
 // --- Initialization ---
 
 async function loadData() {
   try {
-    const [itemsRes, scenariosRes] = await Promise.all([
+    const [itemsRes, scenariosRes, tipsRes] = await Promise.all([
       fetch('grd-bag-game/src/data/items.json'),
-      fetch('grd-bag-game/src/data/scenarios.json')
+      fetch('grd-bag-game/src/data/scenarios.json'),
+      fetch('grd-bag-game/src/data/tips.json')
     ]);
     ALL_ITEMS = await itemsRes.json();
     ALL_SCENARIOS = await scenariosRes.json();
+    ALL_TIPS = await tipsRes.json();
+    
+    // Initialize tips album
+    TipsAlbum.init(ALL_TIPS);
+    
     console.log('Items loaded:', ALL_ITEMS.length);
     console.log('Scenarios loaded:', ALL_SCENARIOS.length);
+    console.log('Tips loaded:', ALL_TIPS.length);
   } catch (e) {
     console.error('Error loading data:', e);
     // Fallback UI error?
@@ -261,16 +274,64 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnStart = document.getElementById('btn-start');
   const btnCloseTutorial = document.getElementById('btn-close-tutorial');
   const btnRetry = document.getElementById('btn-retry');
+  const btnDailyChallenge = document.getElementById('btn-daily-challenge');
+  const btnStartDaily = document.getElementById('btn-start-daily');
+  const btnBackFromDaily = document.getElementById('btn-back-from-daily');
 
   if (btnStart) btnStart.addEventListener('click', startGame);
   if (btnCloseTutorial) btnCloseTutorial.addEventListener('click', proceedToGame);
   
+  if (btnDailyChallenge) {
+    btnDailyChallenge.addEventListener('click', showDailyChallenge);
+  }
+  
+  if (btnStartDaily) {
+    btnStartDaily.addEventListener('click', startDailyChallenge);
+  }
+  
+  if (btnBackFromDaily) {
+    btnBackFromDaily.addEventListener('click', () => {
+      UI.showScreen('intro');
+    });
+  }
+  
+  const btnTipsAlbum = document.getElementById('btn-tips-album');
+  const btnBackFromTips = document.getElementById('btn-back-from-tips');
+  
+  if (btnTipsAlbum) {
+    btnTipsAlbum.addEventListener('click', showTipsAlbum);
+  }
+  
+  if (btnBackFromTips) {
+    btnBackFromTips.addEventListener('click', () => {
+      UI.showScreen('intro');
+    });
+  }
+  
+  const btnStats = document.getElementById('btn-stats');
+  const btnBackFromStats = document.getElementById('btn-back-from-stats');
+  
+  if (btnStats) {
+    btnStats.addEventListener('click', showStats);
+  }
+  
+  if (btnBackFromStats) {
+    btnBackFromStats.addEventListener('click', () => {
+      UI.showScreen('intro');
+    });
+  }
+  
   if (btnRetry) {
     btnRetry.addEventListener('click', () => {
-      startGame();
+      if (isDailyMode) {
+        startDailyChallenge();
+      } else {
+        startGame();
+      }
     });
   }
   document.getElementById('btn-home').addEventListener('click', () => {
+    isDailyMode = false;
     UI.showScreen('intro');
   });
 
@@ -329,3 +390,139 @@ document.addEventListener('DOMContentLoaded', async () => {
     runPhase('briefing');
   });
 });
+
+// --- Daily Challenge Functions ---
+
+function showDailyChallenge() {
+  currentDailyChallenge = DailyChallenge.getTodayChallenge(ALL_SCENARIOS);
+  const stats = DailyChallenge.getStats();
+  
+  UI.renderDailyChallengeScreen(currentDailyChallenge, stats);
+  
+  // Update leaderboard
+  const leaderboard = DailyChallenge.getDailyLeaderboard();
+  const listEl = document.getElementById('daily-leaderboard-list');
+  if (listEl) {
+    if (leaderboard.length === 0) {
+      listEl.innerHTML = '<li style="text-align: center; padding: var(--space-4); opacity: 0.6;">Sé el primero en jugar hoy</li>';
+    } else {
+      listEl.innerHTML = leaderboard.map((entry, idx) => `
+        <li>
+          <span class="rank">#${idx + 1}</span>
+          <span class="name">${entry.name}</span>
+          <span class="score">${entry.score}</span>
+        </li>
+      `).join('');
+    }
+  }
+  
+  UI.showScreen('dailyChallenge');
+}
+
+function startDailyChallenge() {
+  isDailyMode = true;
+  
+  // Initialize game with fixed scenario from daily challenge
+  initGame('challenge', ALL_ITEMS, [currentDailyChallenge.scenario]);
+  
+  // Force the scenario to be today's challenge
+  state.currentScenario = currentDailyChallenge.scenario;
+  
+  // Mark day as played
+  DailyChallenge.markDayPlayed();
+  
+  // Start the game
+  runPhase('briefing');
+}
+
+// Handle game finish with daily challenge support
+function finishGame() {
+  if (isDailyMode && state.score > 0) {
+    // Check if it's a top score for today
+    if (DailyChallenge.isTopScore(state.score)) {
+      // Show name input for daily leaderboard
+      const nameInput = document.getElementById('player-name');
+      const highScoreForm = document.getElementById('high-score-form');
+      
+      if (nameInput && highScoreForm) {
+        nameInput.value = '';
+        highScoreForm.classList.remove('hidden');
+        
+        // Override the save button to save to daily leaderboard
+        const saveBtn = document.getElementById('btn-save-score');
+        const newSaveBtn = saveBtn.cloneNode(true);
+        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+        
+        newSaveBtn.addEventListener('click', () => {
+          DailyChallenge.saveDailyScore(nameInput.value, state.score);
+          highScoreForm.classList.add('hidden');
+          UI.showFeedback('¡Guardado!', 'Tu puntaje está en el ranking diario', 'success');
+          
+          // Update the results display with daily leaderboard
+          showDailyLeaderboardInResults();
+        });
+      }
+    }
+  }
+  
+  // Render final results
+  UI.renderFinalResults();
+  UI.showScreen('results');
+}
+
+function showDailyLeaderboardInResults() {
+  const listEl = document.getElementById('leaderboard-results');
+  if (listEl && isDailyMode) {
+    const leaderboard = DailyChallenge.getDailyLeaderboard();
+    const resultsTitle = document.querySelector('.results-leaderboard h3');
+    if (resultsTitle) {
+      resultsTitle.textContent = '🏅 Ranking Diario';
+    }
+    
+    if (leaderboard.length > 0) {
+      listEl.innerHTML = leaderboard.map((entry, idx) => `
+        <li>
+          <span class="rank">#${idx + 1}</span>
+          <span class="name">${entry.name}</span>
+          <span class="score">${entry.score}</span>
+        </li>
+      `).join('');
+    }
+  }
+}
+
+// --- Tips Album Functions ---
+
+function showTipsAlbum() {
+  // Update daily streak from daily challenge
+  const stats = TipsAlbum.getStats();
+  const dailyStreak = DailyChallenge.getStreak();
+  if (dailyStreak !== stats.dailyStreak) {
+    TipsAlbum.updateStats({ dailyStreak: dailyStreak });
+  }
+  
+  const tips = TipsAlbum.getAllTipsWithStatus();
+  const progress = TipsAlbum.getProgress();
+  
+  UI.renderTipsAlbum(tips, progress);
+  UI.showScreen('tipsAlbum');
+}
+
+// --- Statistics Functions ---
+
+function showStats() {
+  const overallStats = Telemetry.getOverallStats();
+  const topItems = Telemetry.getMostSelectedItems(10);
+  const scenarioStats = Telemetry.getScenarioStats();
+  const scoreDistribution = Telemetry.getScoreDistribution();
+  
+  // Create items map for name lookup
+  const itemsMap = {};
+  ALL_ITEMS.forEach(item => {
+    itemsMap[item.id] = item;
+  });
+  
+  UI.renderStats(overallStats, topItems, scenarioStats, scoreDistribution, itemsMap);
+  UI.showScreen('stats');
+}
+
