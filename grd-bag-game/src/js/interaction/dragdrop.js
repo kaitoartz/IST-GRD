@@ -2,6 +2,7 @@ import { state, addToBag, removeFromBag, CONFIG, getItemCategory, addTime } from
 import * as UI from '../ui/ui.js';
 import { bagAnimator } from '../ui/bagAnimation.js';
 import { TipsAlbum } from '../core/tipsAlbum.js';
+import { Telemetry } from '../core/telemetry.js';
 
 export function setupClickHandlers() {
   const trayList = document.getElementById('tray-list');
@@ -46,6 +47,15 @@ export function setupClickHandlers() {
       
       // Track item selection for tips album
       TipsAlbum.trackItemSelection();
+      
+      // Track for telemetry
+      const isEssential = itemCategory === 'E';
+      Telemetry.trackItemSelection(
+        itemId, 
+        state.currentScenario?.id, 
+        isEssential, 
+        true
+      );
       
       // Primero actualizamos el tray para mostrar el estado "ghost"
       UI.renderTray(state.roundItems || state.items);

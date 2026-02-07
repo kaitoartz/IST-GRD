@@ -25,6 +25,7 @@ const screens = {
   pause: document.getElementById("screen-pause"),
   dailyChallenge: document.getElementById("screen-daily-challenge"),
   tipsAlbum: document.getElementById("screen-tips-album"),
+  stats: document.getElementById("screen-stats"),
 };
 
 const toast = {
@@ -578,4 +579,77 @@ function setupTipsFilters(tips) {
 export function showTipUnlockedNotification(tip) {
   showFeedback('🎉 Nuevo Tip Desbloqueado!', tip.title, 'success');
 }
+
+// --- Statistics UI ---
+export function renderStats(overallStats, topItems, scenarioStats, scoreDistribution, itemsMap) {
+  // Update overview
+  document.getElementById('stat-total-games').textContent = overallStats.totalGames || 0;
+  document.getElementById('stat-completion-rate').textContent = `${overallStats.overallCompletionRate || 0}%`;
+  document.getElementById('stat-items-selected').textContent = overallStats.totalItemSelections || 0;
+  
+  // Render top items
+  const topItemsList = document.getElementById('top-items-list');
+  if (topItemsList && topItems.length > 0) {
+    topItemsList.innerHTML = topItems.map((item, idx) => {
+      const itemData = itemsMap[item.itemId];
+      const itemName = itemData ? itemData.name : item.itemId;
+      return `
+        <div class="stats-item">
+          <span class="stats-item-name">#${idx + 1} ${itemName}</span>
+          <span class="stats-item-value">${item.totalSelections}</span>
+        </div>
+      `;
+    }).join('');
+  } else if (topItemsList) {
+    topItemsList.innerHTML = '<p style="text-align: center; opacity: 0.6;">No hay datos todavía</p>';
+  }
+  
+  // Render scenario stats
+  const scenarioStatsList = document.getElementById('scenario-stats-list');
+  if (scenarioStatsList && Object.keys(scenarioStats).length > 0) {
+    scenarioStatsList.innerHTML = Object.entries(scenarioStats).map(([id, stats]) => {
+      const completionRate = stats.totalAttempts > 0 
+        ? Math.round((stats.completions / stats.totalAttempts) * 100)
+        : 0;
+      return `
+        <div class="stats-item">
+          <div>
+            <div class="stats-item-name">${id.charAt(0).toUpperCase() + id.slice(1)}</div>
+            <div style="font-size: var(--text-xs); color: var(--text-light);">
+              ${stats.completions}/${stats.totalAttempts} completados
+            </div>
+          </div>
+          <span class="stats-item-value">${completionRate}%</span>
+        </div>
+      `;
+    }).join('');
+  } else if (scenarioStatsList) {
+    scenarioStatsList.innerHTML = '<p style="text-align: center; opacity: 0.6;">No hay datos todavía</p>';
+  }
+  
+  // Render score distribution
+  const scoreChart = document.getElementById('score-distribution-chart');
+  if (scoreChart && Object.keys(scoreDistribution).length > 0) {
+    const maxCount = Math.max(...Object.values(scoreDistribution).map(d => d.count));
+    scoreChart.innerHTML = Object.entries(scoreDistribution)
+      .sort((a, b) => {
+        const order = ['negative', '0-99', '100-299', '300-499', '500-999', '1000-1999', '2000-2999', '3000+'];
+        return order.indexOf(a[0]) - order.indexOf(b[0]);
+      })
+      .map(([range, data]) => {
+        const percentage = maxCount > 0 ? (data.count / maxCount) * 100 : 0;
+        return `
+          <div class="chart-bar">
+            <div class="chart-label">${range}</div>
+            <div class="chart-bar-fill" style="width: ${percentage}%;">
+              ${data.count} partidas
+            </div>
+          </div>
+        `;
+      }).join('');
+  } else if (scoreChart) {
+    scoreChart.innerHTML = '<p style="text-align: center; opacity: 0.6;">No hay datos todavía</p>';
+  }
+}
+
 

@@ -14,6 +14,7 @@ import { setupClickHandlers } from '../interaction/dragdrop.js';
 import { bagAnimator } from '../ui/bagAnimation.js';
 import { DailyChallenge } from './dailyChallenge.js';
 import { TipsAlbum } from './tipsAlbum.js';
+import { Telemetry } from './telemetry.js';
 
 let ALL_ITEMS = [];
 let ALL_SCENARIOS = [];
@@ -307,6 +308,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
   
+  const btnStats = document.getElementById('btn-stats');
+  const btnBackFromStats = document.getElementById('btn-back-from-stats');
+  
+  if (btnStats) {
+    btnStats.addEventListener('click', showStats);
+  }
+  
+  if (btnBackFromStats) {
+    btnBackFromStats.addEventListener('click', () => {
+      UI.showScreen('intro');
+    });
+  }
+  
   if (btnRetry) {
     btnRetry.addEventListener('click', () => {
       if (isDailyMode) {
@@ -496,5 +510,23 @@ function showTipsAlbum() {
   
   UI.renderTipsAlbum(tips, progress);
   UI.showScreen('tipsAlbum');
+}
+
+// --- Statistics Functions ---
+
+function showStats() {
+  const overallStats = Telemetry.getOverallStats();
+  const topItems = Telemetry.getMostSelectedItems(10);
+  const scenarioStats = Telemetry.getScenarioStats();
+  const scoreDistribution = Telemetry.getScoreDistribution();
+  
+  // Create items map for name lookup
+  const itemsMap = {};
+  ALL_ITEMS.forEach(item => {
+    itemsMap[item.id] = item;
+  });
+  
+  UI.renderStats(overallStats, topItems, scenarioStats, scoreDistribution, itemsMap);
+  UI.showScreen('stats');
 }
 

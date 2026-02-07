@@ -99,6 +99,10 @@
         <button id="btn-tips-album" class="btn btn-secondary btn-lg" style="margin-top: var(--space-3);">
           📚 Álbum de Tips
         </button>
+        
+        <button id="btn-stats" class="btn btn-secondary btn-lg" style="margin-top: var(--space-3);">
+          📊 Estadísticas
+        </button>
 
         <div class="leaderboard-mini">
           <h3>🏆 Mejores Puntajes</h3>
@@ -318,6 +322,57 @@
         
         <div class="actions">
           <button id="btn-back-from-tips" class="btn btn-secondary btn-lg">
+            ← Volver
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA: STATISTICS -->
+    <section id="screen-stats" class="screen hidden">
+      <div class="stats-card glass-panel fade-in-up">
+        <div class="stats-header">
+          <h2>📊 Estadísticas del Juego</h2>
+        </div>
+        
+        <div class="stats-overview">
+          <div class="stat-box-small">
+            <div class="stat-value-small" id="stat-total-games">0</div>
+            <div class="stat-label-small">Partidas Jugadas</div>
+          </div>
+          <div class="stat-box-small">
+            <div class="stat-value-small" id="stat-completion-rate">0%</div>
+            <div class="stat-label-small">Tasa de Éxito</div>
+          </div>
+          <div class="stat-box-small">
+            <div class="stat-value-small" id="stat-items-selected">0</div>
+            <div class="stat-label-small">Items Seleccionados</div>
+          </div>
+        </div>
+        
+        <div class="stats-section">
+          <h3>🎯 Items Más Seleccionados</h3>
+          <div id="top-items-list" class="stats-list custom-scroll">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+        
+        <div class="stats-section">
+          <h3>🌋 Rendimiento por Escenario</h3>
+          <div id="scenario-stats-list" class="stats-list custom-scroll">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+        
+        <div class="stats-section">
+          <h3>📈 Distribución de Puntajes</h3>
+          <div id="score-distribution-chart" class="stats-chart">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+        
+        <div class="actions">
+          <button id="btn-back-from-stats" class="btn btn-secondary btn-lg">
             ← Volver
           </button>
         </div>

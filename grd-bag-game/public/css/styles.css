@@ -2365,5 +2365,131 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
     padding: var(--space-1) var(--space-2);
   }
 }
+
+/* Statistics Screen Styles */
+.stats-card {
+  max-width: 900px;
+  margin: 0 auto;
 }
+
+.stats-header {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.stats-overview {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.stat-box-small {
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  color: white;
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  min-width: 140px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  flex: 1;
+  min-width: 140px;
+  max-width: 200px;
+}
+
+.stat-value-small {
+  font-size: var(--text-2xl);
+  font-weight: 900;
+  margin-bottom: var(--space-1);
+}
+
+.stat-label-small {
+  font-size: var(--text-xs);
+  opacity: 0.9;
+}
+
+.stats-section {
+  background: rgba(255, 255, 255, 0.5);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.stats-section h3 {
+  margin-bottom: var(--space-3);
+  color: var(--dark);
+}
+
+.stats-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.stats-item {
+  background: white;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.stats-item-name {
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.stats-item-value {
+  font-weight: 800;
+  color: var(--primary);
+  font-size: var(--text-lg);
+}
+
+.stats-chart {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.chart-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.chart-label {
+  min-width: 80px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.chart-bar-fill {
+  flex: 1;
+  height: 32px;
+  background: linear-gradient(90deg, var(--primary), var(--dark));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  color: white;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  transition: width 0.5s ease;
+}
+
+@media (max-width: 768px) {
+  .stats-overview {
+    flex-direction: column;
+  }
+  
+  .stat-box-small {
+    max-width: 100%;
+  }
+}
+}
+
 
