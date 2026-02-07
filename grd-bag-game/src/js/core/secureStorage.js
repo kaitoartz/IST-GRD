@@ -219,13 +219,24 @@ export class SecureStorage {
     return Math.min(num, 999999);
   }
   
-  // Sanitize name input
+  // Sanitize name input - comprehensive XSS protection
   static sanitizeName(name) {
     if (!name || typeof name !== 'string') {
       return 'Anónimo';
     }
-    // Remove HTML tags and trim
-    return name.replace(/<[^>]*>/g, '').trim().substring(0, 20) || 'Anónimo';
+    
+    // Create a temporary element to leverage browser's HTML parsing
+    const temp = document.createElement('div');
+    temp.textContent = name; // This escapes HTML entities automatically
+    const safe = temp.innerHTML;
+    
+    // Additional cleanup: remove any remaining special characters
+    const cleaned = safe
+      .replace(/[<>'"]/g, '') // Remove potentially dangerous characters
+      .trim()
+      .substring(0, 20);
+    
+    return cleaned || 'Anónimo';
   }
   
   // Validate date string

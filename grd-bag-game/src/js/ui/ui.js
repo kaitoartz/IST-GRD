@@ -492,11 +492,23 @@ export function renderDailyChallengeScreen(challenge, stats) {
   }
   
   if (scenarioEl && challenge.scenario) {
-    scenarioEl.innerHTML = `
-      <div style="font-size: 2rem; margin-bottom: var(--space-2);">${challenge.scenario.icon}</div>
-      <h3>${challenge.scenario.name}</h3>
-      <p style="margin-top: var(--space-2);">${challenge.scenario.contextNarrative || challenge.scenario.description}</p>
-    `;
+    // Use textContent to prevent XSS
+    scenarioEl.innerHTML = ''; // Clear first
+    const iconDiv = document.createElement('div');
+    iconDiv.style.fontSize = '2rem';
+    iconDiv.style.marginBottom = 'var(--space-2)';
+    iconDiv.textContent = challenge.scenario.icon;
+    
+    const nameHeading = document.createElement('h3');
+    nameHeading.textContent = challenge.scenario.name;
+    
+    const descPara = document.createElement('p');
+    descPara.style.marginTop = 'var(--space-2)';
+    descPara.textContent = challenge.scenario.contextNarrative || challenge.scenario.description;
+    
+    scenarioEl.appendChild(iconDiv);
+    scenarioEl.appendChild(nameHeading);
+    scenarioEl.appendChild(descPara);
   }
   
   if (streakEl) {

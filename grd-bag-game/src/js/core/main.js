@@ -435,8 +435,7 @@ function startDailyChallenge() {
   runPhase('briefing');
 }
 
-// Override finishGame to handle daily challenge scoring
-const originalFinishGame = finishGame;
+// Handle game finish with daily challenge support
 function finishGame() {
   if (isDailyMode && state.score > 0) {
     // Check if it's a top score for today
@@ -466,12 +465,9 @@ function finishGame() {
     }
   }
   
-  // Call original finish game logic
-  if (typeof originalFinishGame === 'function') {
-    // The original might not exist yet, so we'll handle results manually
-    UI.renderFinalResults();
-    UI.showScreen('results');
-  }
+  // Render final results
+  UI.renderFinalResults();
+  UI.showScreen('results');
 }
 
 function showDailyLeaderboardInResults() {

@@ -128,20 +128,26 @@ export class DailyChallenge {
     let streak = 0;
     const today = new Date();
     
-    for (let i = 0; i >= -60; i--) {
+    // Check from today backwards
+    for (let daysAgo = 0; daysAgo <= 60; daysAgo++) {
       const checkDate = new Date(today);
-      checkDate.setDate(checkDate.getDate() + i);
-      const dateStr = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
+      checkDate.setDate(checkDate.getDate() - daysAgo);
+      const dateStr = this.formatDateString(checkDate);
       
       if (history.includes(dateStr)) {
         streak++;
-      } else if (i < 0) {
-        // Break streak if we find a day that wasn't played (but not today)
+      } else if (daysAgo > 0) {
+        // Break streak if we find a missed day (skip today itself)
         break;
       }
     }
     
     return streak;
+  }
+  
+  // Helper to format date string consistently
+  static formatDateString(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
   
   // Clean data older than 30 days
@@ -150,7 +156,7 @@ export class DailyChallenge {
     const thirtyDaysAgo = new Date(today);
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    const cutoffDate = `${thirtyDaysAgo.getFullYear()}-${String(thirtyDaysAgo.getMonth() + 1).padStart(2, '0')}-${String(thirtyDaysAgo.getDate()).padStart(2, '0')}`;
+    const cutoffDate = this.formatDateString(thirtyDaysAgo);
     
     Object.keys(allData).forEach(date => {
       if (date < cutoffDate) {
