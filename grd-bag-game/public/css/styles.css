@@ -2119,4 +2119,81 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
   50% { transform: scale(1.5); opacity: 0.5; }
   100% { transform: scale(1); opacity: 1; }
 }
+
+/* Daily Challenge Styles */
+.daily-challenge-card {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.daily-header {
+  margin-bottom: var(--space-6);
+}
+
+.daily-date {
+  font-size: var(--text-lg);
+  color: var(--text-light);
+  margin-top: var(--space-2);
+}
+
+.scenario-info {
+  background: rgba(255, 255, 255, 0.5);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+  font-size: var(--text-base);
+}
+
+.daily-stats {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  margin-bottom: var(--space-6);
+}
+
+.stat-box {
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  color: white;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  min-width: 120px;
+  box-shadow: var(--shadow-md);
+}
+
+.stat-value {
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  margin-bottom: var(--space-1);
+}
+
+.stat-label {
+  font-size: var(--text-sm);
+  opacity: 0.9;
+}
+
+.daily-leaderboard {
+  background: rgba(255, 255, 255, 0.5);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.daily-leaderboard h3 {
+  margin-bottom: var(--space-3);
+}
+
+@media (max-width: 480px) {
+  .daily-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stat-box {
+    width: 100%;
+    max-width: 200px;
+  }
+}
 }

@@ -91,6 +91,10 @@
         <button id="btn-start" class="btn btn-primary btn-xl pulse-anim">
           ¡JUGAR!
         </button>
+        
+        <button id="btn-daily-challenge" class="btn btn-secondary btn-lg" style="margin-top: var(--space-3);">
+          🏅 Desafío Diario
+        </button>
 
         <div class="leaderboard-mini">
           <h3>🏆 Mejores Puntajes</h3>
@@ -235,6 +239,47 @@
         <div class="actions">
           <button id="btn-retry" class="btn btn-primary btn-xl">🔄 Jugar de Nuevo</button>
           <button id="btn-home" class="btn btn-secondary btn-lg home-btn">🏠 Inicio</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA: DAILY CHALLENGE INFO -->
+    <section id="screen-daily-challenge" class="screen hidden">
+      <div class="daily-challenge-card glass-panel fade-in-up">
+        <div class="daily-header">
+          <h2>🏅 Desafío Diario</h2>
+          <div id="daily-date" class="daily-date"></div>
+        </div>
+        
+        <div id="daily-scenario-info" class="scenario-info">
+          <!-- Scenario details loaded dynamically -->
+        </div>
+        
+        <div class="daily-stats">
+          <div class="stat-box">
+            <div class="stat-value" id="daily-streak">0</div>
+            <div class="stat-label">Días Seguidos</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-value" id="daily-total">0</div>
+            <div class="stat-label">Días Jugados</div>
+          </div>
+        </div>
+        
+        <div class="daily-leaderboard">
+          <h3>🏆 Ranking de Hoy</h3>
+          <ul id="daily-leaderboard-list" class="leaderboard-list">
+            <!-- Loaded dynamically -->
+          </ul>
+        </div>
+        
+        <div class="actions">
+          <button id="btn-start-daily" class="btn btn-primary btn-xl pulse-anim">
+            ¡Jugar Desafío!
+          </button>
+          <button id="btn-back-from-daily" class="btn btn-secondary btn-lg">
+            ← Volver
+          </button>
         </div>
       </div>
     </section>

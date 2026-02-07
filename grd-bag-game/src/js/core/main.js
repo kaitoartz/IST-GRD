@@ -12,10 +12,13 @@ import {
 import * as UI from '../ui/ui.js';
 import { setupClickHandlers } from '../interaction/dragdrop.js';
 import { bagAnimator } from '../ui/bagAnimation.js';
+import { DailyChallenge } from './dailyChallenge.js';
 
 let ALL_ITEMS = [];
 let ALL_SCENARIOS = [];
 let gameLoopInterval = null;
+let isDailyMode = false;
+let currentDailyChallenge = null;
 
 // --- Initialization ---
 
@@ -261,16 +264,38 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnStart = document.getElementById('btn-start');
   const btnCloseTutorial = document.getElementById('btn-close-tutorial');
   const btnRetry = document.getElementById('btn-retry');
+  const btnDailyChallenge = document.getElementById('btn-daily-challenge');
+  const btnStartDaily = document.getElementById('btn-start-daily');
+  const btnBackFromDaily = document.getElementById('btn-back-from-daily');
 
   if (btnStart) btnStart.addEventListener('click', startGame);
   if (btnCloseTutorial) btnCloseTutorial.addEventListener('click', proceedToGame);
   
+  if (btnDailyChallenge) {
+    btnDailyChallenge.addEventListener('click', showDailyChallenge);
+  }
+  
+  if (btnStartDaily) {
+    btnStartDaily.addEventListener('click', startDailyChallenge);
+  }
+  
+  if (btnBackFromDaily) {
+    btnBackFromDaily.addEventListener('click', () => {
+      UI.showScreen('intro');
+    });
+  }
+  
   if (btnRetry) {
     btnRetry.addEventListener('click', () => {
-      startGame();
+      if (isDailyMode) {
+        startDailyChallenge();
+      } else {
+        startGame();
+      }
     });
   }
   document.getElementById('btn-home').addEventListener('click', () => {
+    isDailyMode = false;
     UI.showScreen('intro');
   });
 
@@ -329,3 +354,107 @@ document.addEventListener('DOMContentLoaded', async () => {
     runPhase('briefing');
   });
 });
+
+// --- Daily Challenge Functions ---
+
+function showDailyChallenge() {
+  currentDailyChallenge = DailyChallenge.getTodayChallenge(ALL_SCENARIOS);
+  const stats = DailyChallenge.getStats();
+  
+  UI.renderDailyChallengeScreen(currentDailyChallenge, stats);
+  
+  // Update leaderboard
+  const leaderboard = DailyChallenge.getDailyLeaderboard();
+  const listEl = document.getElementById('daily-leaderboard-list');
+  if (listEl) {
+    if (leaderboard.length === 0) {
+      listEl.innerHTML = '<li style="text-align: center; padding: var(--space-4); opacity: 0.6;">Sé el primero en jugar hoy</li>';
+    } else {
+      listEl.innerHTML = leaderboard.map((entry, idx) => `
+        <li>
+          <span class="rank">#${idx + 1}</span>
+          <span class="name">${entry.name}</span>
+          <span class="score">${entry.score}</span>
+        </li>
+      `).join('');
+    }
+  }
+  
+  UI.showScreen('dailyChallenge');
+}
+
+function startDailyChallenge() {
+  isDailyMode = true;
+  
+  // Initialize game with fixed scenario from daily challenge
+  initGame('challenge', ALL_ITEMS, [currentDailyChallenge.scenario]);
+  
+  // Force the scenario to be today's challenge
+  state.currentScenario = currentDailyChallenge.scenario;
+  
+  // Mark day as played
+  DailyChallenge.markDayPlayed();
+  
+  // Start the game
+  runPhase('briefing');
+}
+
+// Override finishGame to handle daily challenge scoring
+const originalFinishGame = finishGame;
+function finishGame() {
+  if (isDailyMode && state.score > 0) {
+    // Check if it's a top score for today
+    if (DailyChallenge.isTopScore(state.score)) {
+      // Show name input for daily leaderboard
+      const nameInput = document.getElementById('player-name');
+      const highScoreForm = document.getElementById('high-score-form');
+      
+      if (nameInput && highScoreForm) {
+        nameInput.value = '';
+        highScoreForm.classList.remove('hidden');
+        
+        // Override the save button to save to daily leaderboard
+        const saveBtn = document.getElementById('btn-save-score');
+        const newSaveBtn = saveBtn.cloneNode(true);
+        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+        
+        newSaveBtn.addEventListener('click', () => {
+          DailyChallenge.saveDailyScore(nameInput.value, state.score);
+          highScoreForm.classList.add('hidden');
+          UI.showFeedback('¡Guardado!', 'Tu puntaje está en el ranking diario', 'success');
+          
+          // Update the results display with daily leaderboard
+          showDailyLeaderboardInResults();
+        });
+      }
+    }
+  }
+  
+  // Call original finish game logic
+  if (typeof originalFinishGame === 'function') {
+    // The original might not exist yet, so we'll handle results manually
+    UI.renderFinalResults();
+    UI.showScreen('results');
+  }
+}
+
+function showDailyLeaderboardInResults() {
+  const listEl = document.getElementById('leaderboard-results');
+  if (listEl && isDailyMode) {
+    const leaderboard = DailyChallenge.getDailyLeaderboard();
+    const resultsTitle = document.querySelector('.results-leaderboard h3');
+    if (resultsTitle) {
+      resultsTitle.textContent = '🏅 Ranking Diario';
+    }
+    
+    if (leaderboard.length > 0) {
+      listEl.innerHTML = leaderboard.map((entry, idx) => `
+        <li>
+          <span class="rank">#${idx + 1}</span>
+          <span class="name">${entry.name}</span>
+          <span class="score">${entry.score}</span>
+        </li>
+      `).join('');
+    }
+  }
+}

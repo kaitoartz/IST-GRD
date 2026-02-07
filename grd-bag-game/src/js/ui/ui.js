@@ -23,6 +23,7 @@ const screens = {
   briefing: document.getElementById("screen-briefing"),
   debrief: document.getElementById("screen-debrief"),
   pause: document.getElementById("screen-pause"),
+  dailyChallenge: document.getElementById("screen-daily-challenge"),
 };
 
 const toast = {
@@ -474,4 +475,43 @@ export function animateTimeBonusClick() {
 
   btn.classList.add("bubble-pop");
   setTimeout(() => btn.classList.remove("bubble-pop"), 400);
+}
+
+// --- Daily Challenge UI ---
+export function renderDailyChallengeScreen(challenge, stats) {
+  const dateEl = document.getElementById("daily-date");
+  const scenarioEl = document.getElementById("daily-scenario-info");
+  const streakEl = document.getElementById("daily-streak");
+  const totalEl = document.getElementById("daily-total");
+  const leaderboardEl = document.getElementById("daily-leaderboard-list");
+  
+  if (dateEl) {
+    dateEl.textContent = challenge.description;
+  }
+  
+  if (scenarioEl && challenge.scenario) {
+    scenarioEl.innerHTML = `
+      <div style="font-size: 2rem; margin-bottom: var(--space-2);">${challenge.scenario.icon}</div>
+      <h3>${challenge.scenario.name}</h3>
+      <p style="margin-top: var(--space-2);">${challenge.scenario.contextNarrative || challenge.scenario.description}</p>
+    `;
+  }
+  
+  if (streakEl) {
+    streakEl.textContent = stats.currentStreak;
+  }
+  
+  if (totalEl) {
+    totalEl.textContent = stats.totalDaysPlayed;
+  }
+  
+  if (leaderboardEl) {
+    renderDailyLeaderboard(leaderboardEl, challenge.date);
+  }
+}
+
+export function renderDailyLeaderboard(listEl, date = null) {
+  // This will be imported from dailyChallenge in main.js
+  // For now, just render an empty state
+  listEl.innerHTML = '<li style="text-align: center; padding: var(--space-4); opacity: 0.6;">Sé el primero en jugar hoy</li>';
 }
