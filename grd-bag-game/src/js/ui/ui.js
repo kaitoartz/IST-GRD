@@ -236,6 +236,54 @@ export function updateHUD() {
   } else if (levelPill) {
     levelPill.innerHTML = `NIVEL <span id="level-val">${state.level}</span>`;
   }
+  
+  // Update bag weight and volume displays
+  updateBagStats();
+}
+
+export function updateBagStats() {
+  const bagWeight = state.bag.reduce((total, itemId) => {
+    const item = state.items.find(i => i.id === itemId);
+    return total + (item?.weight || 0);
+  }, 0);
+  
+  const bagVolume = state.bag.reduce((total, itemId) => {
+    const item = state.items.find(i => i.id === itemId);
+    return total + (item?.volume || 0);
+  }, 0);
+  
+  const weightEl = document.getElementById("bag-weight");
+  const volumeEl = document.getElementById("bag-volume");
+  
+  if (weightEl) {
+    weightEl.textContent = bagWeight.toFixed(1);
+    // Highlight if approaching limit
+    const statsContainer = weightEl.closest('.stat-item');
+    if (statsContainer) {
+      if (bagWeight > CONFIG.MAX_WEIGHT * 0.9) {
+        statsContainer.style.color = 'var(--danger)';
+      } else if (bagWeight > CONFIG.MAX_WEIGHT * 0.75) {
+        statsContainer.style.color = 'var(--warning)';
+      } else {
+        statsContainer.style.color = '';
+      }
+    }
+  }
+  
+  if (volumeEl) {
+    volumeEl.textContent = bagVolume.toFixed(1);
+    // Highlight if approaching limit
+    const statsContainer = volumeEl.closest('.stat-item');
+    if (statsContainer) {
+      if (bagVolume > CONFIG.MAX_VOLUME * 0.9) {
+        statsContainer.style.color = 'var(--danger)';
+      } else if (bagVolume > CONFIG.MAX_VOLUME * 0.75) {
+        statsContainer.style.color = 'var(--warning)';
+      } else {
+        statsContainer.style.color = '';
+      }
+    }
+  }
 }
 
 // --- Rendering ---

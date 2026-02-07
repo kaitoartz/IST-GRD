@@ -1113,6 +1113,39 @@ body.sc-apagon #scenario-pill { border-color: var(--color-apagon); }
   border: 2px solid rgba(0,0,0,0.08);
 }
 
+/* Weight and Volume Stats */
+.bag-stats {
+  position: absolute;
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-4);
+  z-index: 10;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.95);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  box-shadow: var(--shadow-md);
+  border: 2px solid rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  transition: all 0.3s ease;
+}
+
+.stat-icon {
+  font-size: var(--text-base);
+}
+
+.stat-max {
+  opacity: 0.6;
+}
+
 /* Preview de items dentro de la mochila */
 .bag-items-preview {
   position: absolute;

@@ -46,6 +46,9 @@ export function setupClickHandlers() {
       // Primero actualizamos el tray para mostrar el estado "ghost"
       UI.renderTray(state.roundItems || state.items);
       
+      // Update bag stats display
+      UI.updateBagStats();
+      
       // Lanzamos la animación de vuelo
       await bagAnimator.animateClickToBag(card, {
         id: item.id,
@@ -85,6 +88,14 @@ export function setupClickHandlers() {
          bagAnimator.animateBackpack('shake');
        }
        else if (result.reason === 'duplicate') UI.showFeedback('Atención', 'Ya lo tienes.', 'warning');
+       else if (result.reason === 'overweight') {
+         UI.showFeedback('Demasiado Pesado', `Límite: ${CONFIG.MAX_WEIGHT}kg. Actual: ${result.currentWeight.toFixed(1)}kg`, 'error');
+         bagAnimator.animateBackpack('shake');
+       }
+       else if (result.reason === 'overvolume') {
+         UI.showFeedback('Sin Espacio', `Límite: ${CONFIG.MAX_VOLUME}L. Actual: ${result.currentVolume.toFixed(1)}L`, 'error');
+         bagAnimator.animateBackpack('shake');
+       }
     }
   };
 
@@ -98,6 +109,7 @@ export function setupClickHandlers() {
     UI.playSound('pop');
     removeFromBag(itemId);
     bagAnimator.removeItemFromBag(itemId);
+    UI.updateBagStats(); // Update weight/volume display
     UI.showFeedback('Removido', 'Espacio liberado.', 'info');
     UI.renderTray(state.roundItems || state.items);
   };
